@@ -14,13 +14,14 @@ export default function Component() {
     null,
   );
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [keyword, setKeyword] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleDiaryChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setDiaryEntry(event.target.value);
   };
 
-  const analyzeDiary = async () => {
+  const analyzeDiary = async (retryCount = 0) => {
     if (!diaryEntry.trim()) {
       setError('일기 내용을 입력해주세요.');
       return;
@@ -32,11 +33,11 @@ export default function Component() {
         `/api/analyze?prompt=${encodeURIComponent(diaryEntry)}`,
       );
 
-      console.log(response);
       const keyword = response.data.keyword;
+      setKeyword(keyword);
 
       const youtubeResponse = await axios.get(
-        `/api/video?maxResults=5&q=${keyword} 노래 playist`,
+        `/api/video?maxResults=5&q=${encodeURIComponent(keyword + ' 노래 playlist')}`,
       );
 
       const videos = youtubeResponse.data.data.items;
@@ -47,12 +48,16 @@ export default function Component() {
           title: randomVideo.snippet.title,
           videoUrl: `https://www.youtube.com/watch?v=${randomVideo.id.videoId}`,
         });
+      } else if (retryCount < 5) {
+        console.log('검색된 비디오가 없습니다. 다시 분석을 시도합니다.');
+        analyzeDiary(retryCount + 1);
       } else {
-        setVideoRecommendation(null);
+        console.log('최대 재시도 횟수를 초과했습니다.');
+        setError('추천 비디오를 찾을 수 없습니다. 다시 입력해주세요.');
       }
     } catch (error) {
       console.error('Error fetching data:', error);
-      setError('데이터를 가져오는데 실패했습니다. 다시 시도해주세요.');
+      setError('페이지의 총 하루 할당량이 초과되었습니다.');
     }
     setIsLoading(false);
   };
@@ -68,7 +73,7 @@ export default function Component() {
       <div className="w-full grid gap-2">
         <div className="grid gap-2">
           <label
-            className="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-base"
+            className="font-semibold peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-base"
             htmlFor="diary"
           >
             오늘 하루는 어땠나요?
@@ -87,28 +92,32 @@ export default function Component() {
             className={`inline-flex bg-slate-700 text-white font-semibold items-center justify-center whitespace-nowrap text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-11 rounded-md px-8 w-full ${
               isLoading ? 'opacity-50 cursor-not-allowed' : ''
             }`}
-            onClick={analyzeDiary}
+            onClick={() => analyzeDiary(0)}
             disabled={isLoading}
           >
             {isLoading ? '분석 중...' : '분석'}
           </button>
         </div>
         <div className="grid gap-1.5">
-          <h2 className="text-base font-semibold">추천 Playlist</h2>
+          <h2 className="text-base font-semibold mb-2">
+            추천 Playlist {keyword && ` | 키워드 : ${keyword}`}
+          </h2>
           {videoRecommendation && (
             <div>
               <p className="text-sm font-medium mb-2">
                 {videoRecommendation.title}
               </p>
 
-              <a
-                className="font-semibold text-rose-500 hover:border-b hover:border-blue-500"
-                href={videoRecommendation.videoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                &gt; 클릭하면 유튜브로 이동합니다. &lt;
-              </a>
+              <div className="w-full text-center">
+                <a
+                  className="font-semibold text-rose-500 hover:border-b hover:border-blue-500"
+                  href={videoRecommendation.videoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  &gt; 클릭하면 유튜브로 이동합니다. &lt;
+                </a>
+              </div>
             </div>
           )}
         </div>
