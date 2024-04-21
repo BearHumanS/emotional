@@ -9,6 +9,10 @@ export const GET = async (request: NextRequest) => {
     const { data } = await youtubeServerInstance.search.list({
       part: ['snippet'],
       regionCode: 'KR',
+      relevanceLanguage: 'ko',
+      videoDefinition: 'high',
+      type: ['video'],
+      order: 'rating',
       ...queryParams,
     });
 
@@ -32,7 +36,7 @@ const parseQueryParams = (
   params: URLSearchParams,
 ): GetYoutubeListRequestParams => {
   return {
-    maxResults: Number(params.get('maxResults') ?? 5),
+    maxResults: Number(params.get('maxResults') ?? 20),
     q: params.get('q') ?? 'music',
   };
 };
