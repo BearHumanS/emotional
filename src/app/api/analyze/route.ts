@@ -27,7 +27,7 @@ export const POST = async (req: NextRequest) => {
         {
           role: 'system',
           content:
-            '일기를 분석하여 가장 감정과 유사한 우선 순위 단어 하나만 추출해주세요. ',
+            '일기를 분석하여 유튜브에 음악을 검색할건데 가장 주요한 단어 하나만 추출해주세요. ',
         },
       ],
       max_tokens: 180,
