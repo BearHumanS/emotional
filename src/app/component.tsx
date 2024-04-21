@@ -40,7 +40,7 @@ export default function Component() {
       );
 
       const videos = youtubeResponse.data.data.items;
-      console.log(youtubeResponse);
+
       if (videos.length > 0) {
         const randomVideo = videos[Math.floor(Math.random() * videos.length)];
         setVideoRecommendation({
