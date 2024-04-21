@@ -22,13 +22,10 @@ export const GET = async (request: NextRequest) => {
   } catch (error) {
     console.log(error);
 
-    return new Response(
-      JSON.stringify({ message: '서버 오류가 발생했습니다.' }),
-      {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      },
-    );
+    return new Response(JSON.stringify({ message: error }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 };
 
