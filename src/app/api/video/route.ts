@@ -45,7 +45,7 @@ export const GET = async (req: NextRequest) => {
   }
 };
 
-export const retryWithSecondaryInstance = async (
+const retryWithSecondaryInstance = async (
   error: AxiosError,
   req: NextRequest,
 ) => {
