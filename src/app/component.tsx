@@ -36,7 +36,7 @@ export default function Component() {
       const keyword = response.data.keyword;
 
       const youtubeResponse = await axios.get(
-        `/api/video?maxResults=5&q=${keyword} 노래`,
+        `/api/video?maxResults=5&q=${keyword} 노래 playist`,
       );
 
       const videos = youtubeResponse.data.data.items;
