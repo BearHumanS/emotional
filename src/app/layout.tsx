@@ -1,6 +1,9 @@
 import { Viewport } from 'next/types';
 import { Inter } from 'next/font/google';
+import { getMetadata } from '@/lib/util/getMetaData';
 import './globals.css';
+
+export const metadata = getMetadata();
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -15,6 +18,13 @@ const inter = Inter({
   variable: '--font-inter',
 });
 
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'emotional',
+  url: 'https://www.emotional.today/',
+};
+
 export default function Layout({
   children,
 }: Readonly<{
@@ -22,7 +32,18 @@ export default function Layout({
 }>) {
   return (
     <html lang="ko">
-      <body className={inter.variable}>{children}</body>
+      <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+      </head>
+      <body className={inter.variable}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(jsonLd),
+          }}
+        />
+        {children}
+      </body>
     </html>
   );
 }
