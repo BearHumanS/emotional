@@ -97,14 +97,17 @@ export default function Component() {
           <h2 className="text-base font-semibold">추천 Playlist</h2>
           {videoRecommendation && (
             <div>
-              <p className="text-sm font-medium">{videoRecommendation.title}</p>
+              <p className="text-sm font-medium mb-2">
+                {videoRecommendation.title}
+              </p>
+
               <a
                 className="font-semibold text-rose-500 hover:border-b hover:border-blue-500"
                 href={videoRecommendation.videoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                클릭하면 유튜브로 이동합니다.
+                &gt; 클릭하면 유튜브로 이동합니다. &lt;
               </a>
             </div>
           )}
