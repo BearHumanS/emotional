@@ -62,7 +62,7 @@ export default function Component() {
       <div className="grid gap-4 text-center">
         <h1 className="text-3xl font-bold">Emotional</h1>
         <p className="text-xs text-gray-500 dark:text-gray-400 text">
-          자신의 감정을 표현하면 그에 맞는 추천 음악을 알려드려요.
+          자신의 감정을 표현하면 그에 맞는 추천 노래 Playlist를 알려드려요.
         </p>
       </div>
       <div className="w-full grid gap-2">
@@ -94,7 +94,7 @@ export default function Component() {
           </button>
         </div>
         <div className="grid gap-1.5">
-          <h2 className="text-base font-semibold">추천</h2>
+          <h2 className="text-base font-semibold">추천 Playlist</h2>
           {videoRecommendation && (
             <div>
               <p className="text-sm font-medium">{videoRecommendation.title}</p>
