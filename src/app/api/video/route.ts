@@ -12,8 +12,8 @@ export const GET = async (request: NextRequest) => {
       ...queryParams,
     });
 
-    return Response.json({
-      data,
+    return new Response(JSON.stringify({ data }), {
+      headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
     console.log(error);
