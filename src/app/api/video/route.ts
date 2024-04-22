@@ -89,5 +89,3 @@ const retryWithSecondaryInstance = async (
     headers: { 'Content-Type': 'application/json' },
   });
 };
-
-export const dynamic = 'force-dynamic';
