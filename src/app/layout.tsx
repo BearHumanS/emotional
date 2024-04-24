@@ -33,7 +33,9 @@ export default function Layout({
   return (
     <html lang="ko">
       <head>
+        <meta name="robots" content="index,follow" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="canonical" href="https://www.emotional.today/" />
       </head>
       <body className={inter.variable}>
         <script
