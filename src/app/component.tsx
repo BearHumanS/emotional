@@ -66,9 +66,7 @@ export default function Component() {
     <div className="flex flex-col min-h-screen w-full items-center justify-center gap-4 p-4 lg:p-8">
       <div className="grid gap-4 text-center">
         <a href="https://www.emotional.today/">
-          <h1 className="text-3xl font-bold">
-            이모셔널: 감정과 음악을 연결하는 추천 플레이리스트
-          </h1>
+          <h1 className="text-3xl font-bold">Emotional</h1>
         </a>
         <p className="text-xs text-gray-500 dark:text-gray-400 text">
           자신의 감정을 표현하면 그에 맞는 추천 노래 Playlist를 알려드려요.
