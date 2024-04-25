@@ -1,5 +1,5 @@
 export const Meta = {
-  title: '이모셔널',
+  title: '이모셔널 | 감정에 맞는 노래 추천 플레이리스트',
   siteName: '이모셔널 | Emotional',
   description:
     '자신의 감정을 표현하면 그에 맞는 추천 노래 Playlist를 알려드려요. 오늘 하루는 어땠나요?',
@@ -24,5 +24,5 @@ export const Meta = {
   ],
   url: 'https://www.emotional.today/',
   naverVerification: 'cde8956ade8797ebd60205e32864a43ffad92e24',
-  image: '/og-imgae.jpg',
+  image: '/emotional-playlist-recommend.jpg',
 } as const;
