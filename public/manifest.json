@@ -1,0 +1,30 @@
+{
+  "theme_color": "#000",
+  "background_color": "#fff",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
+  "name": "이모셔널",
+  "short_name": "이모셔널",
+  "description": "자신의 감정을 표현하면 그에 맞는 추천 노래 Playlist를 알려드려요. 오늘 하루는 어땠나요?",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-256x256.png",
+      "sizes": "256x256",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
