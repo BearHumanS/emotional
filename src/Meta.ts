@@ -2,7 +2,7 @@ export const Meta = {
   title: '이모셔널',
   siteName: '이모셔널 | Emotional',
   description:
-    '자신의 감정을 표현하면 그에 맞는 추천 노래 Playlist를 알려드려요.',
+    '자신의 감정을 표현하면 그에 맞는 추천 노래 Playlist를 알려드려요. 오늘 하루는 어땠나요?',
   keywords: [
     'emotional',
     '이모셔널',
