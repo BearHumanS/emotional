@@ -113,7 +113,7 @@ export default function Component() {
                   className="font-semibold text-rose-500 hover:border-b hover:border-blue-500"
                   href={videoRecommendation.videoUrl}
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="anchor text"
                 >
                   &gt; 클릭하면 유튜브로 이동합니다. &lt;
                 </a>
