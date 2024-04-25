@@ -1,6 +1,7 @@
 import { Viewport } from 'next/types';
 import { Inter } from 'next/font/google';
 import { getMetadata } from '@/lib/util/getMetaData';
+import { GoogleAnalytics } from '@next/third-parties/google';
 import './globals.css';
 
 export const metadata = getMetadata();
@@ -30,6 +31,7 @@ export default function Layout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const GA = process.env.NEXT_PUBLIC_GA_ID as string;
   return (
     <html lang="ko">
       <head>
@@ -46,6 +48,7 @@ export default function Layout({
         />
         {children}
       </body>
+      <GoogleAnalytics gaId={GA} />
     </html>
   );
 }

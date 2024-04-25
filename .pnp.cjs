@@ -26,6 +26,7 @@ const RAW_RUNTIME_STATE =
       [null, {\
         "packageLocation": "./",\
         "packageDependencies": [\
+          ["@next/third-parties", "virtual:572974bfd16fba63746e564b946fcd0d5481e3958a2d86b2339f8f9624fc9f4abd3898c4444c731638d6001d3f88ca414f2c05308d6789925602f170e2d31abc#npm:14.0.5-canary.38"],\
           ["@types/node", "npm:20.12.7"],\
           ["@types/react", "npm:18.2.79"],\
           ["@types/react-dom", "npm:18.2.25"],\
@@ -335,6 +336,33 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/unplugged/@next-swc-win32-x64-msvc-npm-14.2.1-aa63ac5522/node_modules/@next/swc-win32-x64-msvc/",\
         "packageDependencies": [\
           ["@next/swc-win32-x64-msvc", "npm:14.2.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@next/third-parties", [\
+      ["npm:14.0.5-canary.38", {\
+        "packageLocation": "../../AppData/Local/Yarn/Berry/cache/@next-third-parties-npm-14.0.5-canary.38-9ee26a2a5e-10c0.zip/node_modules/@next/third-parties/",\
+        "packageDependencies": [\
+          ["@next/third-parties", "npm:14.0.5-canary.38"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:572974bfd16fba63746e564b946fcd0d5481e3958a2d86b2339f8f9624fc9f4abd3898c4444c731638d6001d3f88ca414f2c05308d6789925602f170e2d31abc#npm:14.0.5-canary.38", {\
+        "packageLocation": "./.yarn/__virtual__/@next-third-parties-virtual-977132ecb7/3/AppData/Local/Yarn/Berry/cache/@next-third-parties-npm-14.0.5-canary.38-9ee26a2a5e-10c0.zip/node_modules/@next/third-parties/",\
+        "packageDependencies": [\
+          ["@next/third-parties", "virtual:572974bfd16fba63746e564b946fcd0d5481e3958a2d86b2339f8f9624fc9f4abd3898c4444c731638d6001d3f88ca414f2c05308d6789925602f170e2d31abc#npm:14.0.5-canary.38"],\
+          ["@types/next", null],\
+          ["@types/react", "npm:18.2.79"],\
+          ["next", "virtual:572974bfd16fba63746e564b946fcd0d5481e3958a2d86b2339f8f9624fc9f4abd3898c4444c731638d6001d3f88ca414f2c05308d6789925602f170e2d31abc#npm:14.2.1"],\
+          ["react", "npm:18.2.0"],\
+          ["third-party-capital", "npm:1.0.20"]\
+        ],\
+        "packagePeers": [\
+          "@types/next",\
+          "@types/react",\
+          "next",\
+          "react"\
         ],\
         "linkType": "HARD"\
       }]\
@@ -5159,6 +5187,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./",\
         "packageDependencies": [\
           ["test", "workspace:."],\
+          ["@next/third-parties", "virtual:572974bfd16fba63746e564b946fcd0d5481e3958a2d86b2339f8f9624fc9f4abd3898c4444c731638d6001d3f88ca414f2c05308d6789925602f170e2d31abc#npm:14.0.5-canary.38"],\
           ["@types/node", "npm:20.12.7"],\
           ["@types/react", "npm:18.2.79"],\
           ["@types/react-dom", "npm:18.2.25"],\
@@ -5206,6 +5235,15 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["thenify-all", "npm:1.6.0"],\
           ["thenify", "npm:3.3.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["third-party-capital", [\
+      ["npm:1.0.20", {\
+        "packageLocation": "../../AppData/Local/Yarn/Berry/cache/third-party-capital-npm-1.0.20-63003fae3f-10c0.zip/node_modules/third-party-capital/",\
+        "packageDependencies": [\
+          ["third-party-capital", "npm:1.0.20"]\
         ],\
         "linkType": "HARD"\
       }]\
