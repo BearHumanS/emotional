@@ -19,9 +19,7 @@ export const getMetadata = (metadataProps?: generateMetadataProps) => {
 
   const metadata: Metadata = {
     metadataBase: new URL(Meta.url),
-    alternates: {
-      canonical: PAGE_URL,
-    },
+
     title: TITLE,
     description: DESCRIPTION,
     keywords: [...Meta.keywords],
