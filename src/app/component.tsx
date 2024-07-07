@@ -48,7 +48,7 @@ export default function Component() {
         setListening(false);
       };
 
-      recognition.onspeechend = () => {
+      recognition.onend = () => {
         setListening(false);
       };
 
@@ -63,7 +63,7 @@ export default function Component() {
     if (!listening && diaryEntry.trim()) {
       analyzeDiary();
     }
-  }, [diaryEntry, listening]);
+  }, [listening]);
 
   const handleDiaryChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setDiaryEntry(event.target.value);
@@ -147,12 +147,13 @@ export default function Component() {
               오늘 하루는 어땠나요?
             </label>
             <button
-              className={`inline-flex bg-slate-700 text-white font-semibold items-center justify-center whitespace-nowrap text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-11 rounded-md px-4  ${
+              className={`inline-flex bg-slate-700 text-white font-semibold items-center justify-center whitespace-nowrap text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-[50px] rounded-full px-4  ${
                 listening ? 'pulse-animation' : ''
               }`}
               onClick={listening ? stopListening : startListening}
+              disabled={isLoading}
             >
-              {listening ? '듣는 중...' : '음성 입력'}
+              {listening ? '🔊' : '🎙️'}
             </button>
           </div>
           <textarea
@@ -161,17 +162,18 @@ export default function Component() {
             placeholder="여기에 당신의 하루를 입력해주세요."
             value={diaryEntry}
             onChange={handleDiaryChange}
+            disabled={isLoading || listening}
           ></textarea>
         </div>
 
-        {error && <p className="text-red-500">{error}</p>}
+        {error && <p className="text-red-500 w-80">{error}</p>}
         <div className="grid gap-2">
           <button
             className={`inline-flex bg-slate-700 text-white font-semibold items-center justify-center whitespace-nowrap text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-11 rounded-md px-8 w-full ${
               isLoading ? 'opacity-50 cursor-not-allowed' : ''
             }`}
             onClick={() => analyzeDiary(0)}
-            disabled={isLoading}
+            disabled={isLoading || listening}
           >
             {isLoading ? '분석 중...' : '분석'}
           </button>
