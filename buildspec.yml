@@ -22,3 +22,8 @@ phases:
       - sudo chown -R $USER:$GROUP ~/.npm
       - sudo chown -R $USER:$GROUP ~/.config
       - yarn run build
+  post_build:
+    commands:
+      - echo "Setting permissions for server pages..."
+      - sudo chown -R $USER:$GROUP /codebuild/output/src2754623343/src/emotional/.next/server/pages
+      - sudo chmod -R 775 /codebuild/output/src2754623343/src/emotional/.next/server/pages
