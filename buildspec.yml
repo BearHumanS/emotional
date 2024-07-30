@@ -3,7 +3,7 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      nodejs: 18
+      nodejs: 14
     commands:
       - echo "Installing dependencies..."
       - yarn install
@@ -15,4 +15,10 @@ phases:
   build:
     commands:
       - echo "Starting build process..."
-      - yarn build
+      - echo "NEXT_PUBLIC_OPENAI_API_KEY=$NEXT_PUBLIC_OPENAI_API_KEY" >> .env
+      - echo "NEXT_PUBLIC_MUSIC_API=$NEXT_PUBLIC_MUSIC_API" >> .env
+      - echo "NEXT_PUBLIC_MUSIC_API2=$NEXT_PUBLIC_MUSIC_API2" >> .env
+      - echo "NEXT_PUBLIC_GA_ID=$NEXT_PUBLIC_GA_ID" >> .env
+      - sudo chown -R $USER:$GROUP ~/.npm
+      - sudo chown -R $USER:$GROUP ~/.config
+      - yarn run build
