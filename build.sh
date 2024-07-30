@@ -17,5 +17,5 @@ chmod -R 775 ./output
 chmod -R 775 ./emotional/output
 
 # 추가로 권한 문제를 방지하기 위해 다음을 포함
-sudo chown -R $USER:$GROUP /codebuild/output/root
+sudo chown -R MSI:MSI /codebuild/output/root
 sudo chmod -R 775 /codebuild/output/root
