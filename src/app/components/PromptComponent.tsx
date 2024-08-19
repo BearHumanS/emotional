@@ -1,4 +1,4 @@
-import React from 'react';
+import { ChangeEvent, Dispatch, SetStateAction } from 'react';
 import { analyzeDiary } from '../api/analyze/analyze';
 import { fetchYoutubeVideos } from '../api/video/video';
 
@@ -9,16 +9,18 @@ interface Video {
 
 interface PromptComponentProps {
   diaryEntry: string;
-  setVideoRecommendation: React.Dispatch<React.SetStateAction<Video | null>>;
-  setKeyword: React.Dispatch<React.SetStateAction<string | null>>;
-  setError: React.Dispatch<React.SetStateAction<string | null>>;
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setDiaryEntry: Dispatch<SetStateAction<string>>;
+  setVideoRecommendation: Dispatch<SetStateAction<Video | null>>;
+  setKeyword: Dispatch<SetStateAction<string | null>>;
+  setError: Dispatch<SetStateAction<string | null>>;
+  setIsLoading: Dispatch<SetStateAction<boolean>>;
   isLoading: boolean;
   listening: boolean;
 }
 
 export default function PromptComponent({
   diaryEntry,
+  setDiaryEntry,
   setVideoRecommendation,
   setKeyword,
   setError,
@@ -57,6 +59,10 @@ export default function PromptComponent({
     setIsLoading(false);
   };
 
+  const handleDiaryChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    setDiaryEntry(event.target.value);
+  };
+
   return (
     <div className="grid gap-2">
       <textarea
@@ -64,7 +70,7 @@ export default function PromptComponent({
         id="diary"
         placeholder="여기에 당신의 하루를 입력해주세요."
         value={diaryEntry}
-        readOnly
+        onChange={handleDiaryChange}
         disabled={isLoading || listening}
       ></textarea>
       <div className="grid gap-2">
