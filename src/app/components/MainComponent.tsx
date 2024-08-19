@@ -11,6 +11,7 @@ export interface Video {
 }
 
 export default function MainComponent() {
+  const [diaryEntry, setDiaryEntry] = useState<string>('');
   const [videoRecommendation, setVideoRecommendation] = useState<Video | null>(
     null,
   );
@@ -32,13 +33,14 @@ export default function MainComponent() {
 
       <div className="grid gap-2 w-full">
         <SttComponent
-          onResult={(transcript) => setVideoRecommendation(transcript)}
+          setDiaryEntry={setDiaryEntry}
           setListening={setListening}
           listening={listening}
           setError={setError}
         />
 
         <PromptComponent
+          diaryEntry={diaryEntry}
           setVideoRecommendation={setVideoRecommendation}
           setKeyword={setKeyword}
           setError={setError}

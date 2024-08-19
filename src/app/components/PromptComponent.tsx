@@ -1,18 +1,24 @@
-import { useState, ChangeEvent, Dispatch, SetStateAction } from 'react';
+import React from 'react';
 import { analyzeDiary } from '../api/analyze/analyze';
 import { fetchYoutubeVideos } from '../api/video/video';
-import { Video } from './MainComponent';
+
+interface Video {
+  title: string;
+  videoUrl: string;
+}
 
 interface PromptComponentProps {
-  setVideoRecommendation: Dispatch<SetStateAction<Video | null>>;
-  setKeyword: Dispatch<SetStateAction<string | null>>;
-  setError: Dispatch<SetStateAction<string | null>>;
-  setIsLoading: Dispatch<SetStateAction<boolean>>;
+  diaryEntry: string;
+  setVideoRecommendation: React.Dispatch<React.SetStateAction<Video | null>>;
+  setKeyword: React.Dispatch<React.SetStateAction<string | null>>;
+  setError: React.Dispatch<React.SetStateAction<string | null>>;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   isLoading: boolean;
   listening: boolean;
 }
 
 export default function PromptComponent({
+  diaryEntry,
   setVideoRecommendation,
   setKeyword,
   setError,
@@ -20,12 +26,6 @@ export default function PromptComponent({
   isLoading,
   listening,
 }: PromptComponentProps) {
-  const [diaryEntry, setDiaryEntry] = useState<string>('');
-
-  const handleDiaryChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    setDiaryEntry(event.target.value);
-  };
-
   const analyzeDiaryAndFetchVideos = async (retryCount = 0) => {
     if (!diaryEntry.trim()) {
       setError('일기 내용을 입력해주세요.');
@@ -45,11 +45,9 @@ export default function PromptComponent({
           videoUrl: `https://www.youtube.com/watch?v=${randomVideo.id.videoId}`,
         });
       } else if (retryCount < 5) {
-        console.log('검색된 비디오가 없습니다. 다시 분석을 시도합니다.');
         setError('추천 PLAYLIST를 찾을 수 없습니다. 다시 분석을 시도합니다.');
         analyzeDiaryAndFetchVideos(retryCount + 1);
       } else {
-        console.log('최대 재시도 횟수를 초과했습니다.');
         setError('추천 PLAYLIST를 찾을 수 없습니다. 다시 입력해주세요.');
       }
     } catch (error) {
@@ -60,13 +58,13 @@ export default function PromptComponent({
   };
 
   return (
-    <>
+    <div className="grid gap-2">
       <textarea
         className="flex w-full resize-none rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[200px] shadow-none"
         id="diary"
         placeholder="여기에 당신의 하루를 입력해주세요."
         value={diaryEntry}
-        onChange={handleDiaryChange}
+        readOnly
         disabled={isLoading || listening}
       ></textarea>
       <div className="grid gap-2">
@@ -80,6 +78,6 @@ export default function PromptComponent({
           {isLoading ? '분석 중...' : '분석'}
         </button>
       </div>
-    </>
+    </div>
   );
 }

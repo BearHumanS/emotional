@@ -2,14 +2,14 @@ import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { Video } from './MainComponent';
 
 interface SttComponentProps {
-  onResult: (transcript: Video) => void;
+  setDiaryEntry: Dispatch<SetStateAction<string>>;
   setListening: Dispatch<SetStateAction<boolean>>;
   listening: boolean;
   setError: Dispatch<SetStateAction<string | null>>;
 }
 
 export default function SttComponent({
-  onResult,
+  setDiaryEntry,
   setListening,
   listening,
   setError,
@@ -31,7 +31,7 @@ export default function SttComponent({
         let interimTranscript = '';
         for (let i = event.resultIndex; i < event.results.length; i++) {
           if (event.results[i].isFinal) {
-            onResult(event.results[i][0].transcript);
+            setDiaryEntry((prev) => prev + event.results[i][0].transcript);
           } else {
             interimTranscript += event.results[i][0].transcript;
           }
@@ -53,10 +53,11 @@ export default function SttComponent({
       console.error('Web Speech API is not supported in this browser.');
       setError('이 브라우저에서는 음성 인식을 지원하지 않습니다.');
     }
-  }, [onResult, setListening, setError]);
+  }, [setDiaryEntry, setError, setListening]);
 
   const startListening = () => {
     if (recognition) {
+      setDiaryEntry('');
       recognition.start();
       setListening(true);
       setError(null);
