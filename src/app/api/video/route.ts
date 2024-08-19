@@ -62,7 +62,7 @@ const retryWithSecondaryInstance = async (
         relevanceLanguage: 'ko',
         videoDefinition: 'high',
         type: ['video'],
-        order: 'rating',
+        order: 'viewCount',
         ...queryParams,
       });
 
@@ -70,7 +70,7 @@ const retryWithSecondaryInstance = async (
         headers: { 'Content-Type': 'application/json' },
       });
     } catch (errorRe) {
-      console.log('Secondary instance error:', errorRe);
+      console.log('두번째 인스턴스 에러', errorRe);
 
       return new Response(
         JSON.stringify({
@@ -84,7 +84,7 @@ const retryWithSecondaryInstance = async (
     }
   }
 
-  return new Response(JSON.stringify({ message: 'An error occurred' }), {
+  return new Response(JSON.stringify({ message: '에러 발생' }), {
     status: error.response?.status || 500,
     headers: { 'Content-Type': 'application/json' },
   });

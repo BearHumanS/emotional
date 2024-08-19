@@ -1,5 +1,9 @@
-import Component from './component';
+import MainComponent from '@/app/components/MainComponent';
 
 export default function Home() {
-  return <Component />;
+  return (
+    <>
+      <MainComponent />
+    </>
+  );
 }
