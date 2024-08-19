@@ -21,7 +21,7 @@ export default function MainComponent() {
   const [listening, setListening] = useState<boolean>(false);
 
   return (
-    <div className="flex flex-col min-h-screen-minus-40 w-full items-center justify-center gap-4 p-4 lg:p-8 border-2 border-solid border-slate-400 rounded-lg m-5">
+    <div className="flex flex-col min-h-screen-minus-40 w-full items-center justify-center gap-4 p-4 lg:p-8">
       <div className="grid gap-4 text-center">
         <a href="https://www.emotional.today/">
           <h1 className="text-3xl font-bold">Emotional</h1>
