@@ -58,7 +58,7 @@ export default function MainComponent() {
         />
       </div>
 
-      <div className="absolute bottom-10 text-slate-300">
+      <div className="absolute bottom-2 text-slate-300">
         Copyright 2024. BearHumanS all rights reserved.
       </div>
     </div>
