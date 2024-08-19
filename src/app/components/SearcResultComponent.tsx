@@ -14,11 +14,11 @@ export default function SearcResultComponent({
 }: SearcResultComponentProps) {
   return (
     <div className="grid gap-1.5 text-center">
-      <h2 className="text-base font-semibold mb-2 w-80">
+      <h2 className="text-base font-semibold mb-2">
         추천 Playlist {keyword && ` | 키워드 : ${keyword}`}
       </h2>
       {videoRecommendation && (
-        <div className="w-80">
+        <div>
           <span className="text-sm font-medium mb-2">
             {videoRecommendation.title}
           </span>
