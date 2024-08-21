@@ -1,11 +1,19 @@
-import axios from 'axios';
+import { fetchData } from '../fetchData';
 
 export const fetchYoutubeVideos = async (keyword: string) => {
   try {
-    const res = await axios.get(
-      `/api/video?maxResults=5&q=${encodeURIComponent(keyword + ' 노래 playlist')}`,
+    const res = await fetchData(
+      `/youtubeSearch?maxResults=5&q=${encodeURIComponent(keyword + ' 노래 playlist')}`,
+      'get',
     );
-    return res.data.data.items;
+
+    const items = res?.data?.items;
+
+    if (!items || items.length === 0) {
+      throw new Error('비디오 데이터를 찾을 수 없습니다.');
+    }
+
+    return items;
   } catch (error) {
     console.error(error);
     throw new Error('플레이리스트 불러오기 실패');
