@@ -1,11 +1,19 @@
 import axios from 'axios';
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const API_URL = process.env.NEXT_PUBLIC_BBASE_API_URL;
 
-const axiosConfig = {
+const axiosConfig_Lambda = {
   baseURL: BASE_URL,
   headers: { 'Content-Type': 'application/json' },
   withCredentials: false,
 };
 
-export const instanse = axios.create(axiosConfig);
+const axiosConfig_ABS = {
+  baseURL: API_URL,
+  headers: { 'Content-Type': 'application/json' },
+  withCredentials: true,
+};
+
+export const instanse_Lambda = axios.create(axiosConfig_Lambda);
+export const instanse_ABS = axios.create(axiosConfig_ABS);
