@@ -3,7 +3,7 @@
 import { emailRegex, passwordRegex } from '@/lib/constants/constants';
 import { useRouter } from 'next/navigation';
 import { ChangeEvent, FormEvent, useState } from 'react';
-import { fetchResister } from '../api/userApi';
+import { fetchRegister } from '../api/userApi';
 
 function Register() {
   const [userId, setUserId] = useState('');
@@ -40,14 +40,14 @@ function Register() {
     setUserPassword(e.target.value);
   };
 
-  const onResisterSubmit = async (e: FormEvent) => {
+  const onRegisterSubmit = async (e: FormEvent) => {
     e.preventDefault();
     validateEmail();
     validatePassword();
 
     if (!errors.id && !errors.password) {
       try {
-        await fetchResister({
+        await fetchRegister({
           email: userId,
           password: userPassword,
         });
@@ -61,7 +61,7 @@ function Register() {
   };
 
   return (
-    <form onSubmit={onResisterSubmit}>
+    <form onSubmit={onRegisterSubmit}>
       <div>
         <label htmlFor="id">ID</label>
         <input

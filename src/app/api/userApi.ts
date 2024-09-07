@@ -1,17 +1,17 @@
 import { fetchData } from './fetchData';
 
-type fetchResisterProps = {
+type fetchRegisterProps = {
   email: string;
   password: string;
 };
 
-export const fetchResister = async ({
+export const fetchRegister = async ({
   email,
   password,
-}: fetchResisterProps) => {
+}: fetchRegisterProps) => {
   try {
     const res = await fetchData(
-      `/users/resister`,
+      `/users/register`,
       'post',
       { email, password },
       true,
