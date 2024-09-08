@@ -1,11 +1,11 @@
-'use clent';
+'use client';
 
+import { fetchRegister } from '@/app/api/userApi';
 import { emailRegex, passwordRegex } from '@/lib/constants/constants';
 import { useRouter } from 'next/navigation';
 import { ChangeEvent, FormEvent, useState } from 'react';
-import { fetchRegister } from '../api/userApi';
 
-function Register() {
+function RegisterForm() {
   const [userId, setUserId] = useState('');
   const [userPassword, setUserPassword] = useState('');
   const [errors, setErrors] = useState({ id: '', password: '' });
@@ -93,4 +93,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default RegisterForm;
