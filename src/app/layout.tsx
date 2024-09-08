@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import { getMetadata } from '@/lib/util/getMetaData';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import './globals.css';
+import Footer from './components/footer/Footer';
 
 export const metadata = getMetadata();
 
@@ -55,6 +56,7 @@ export default function Layout({
         />
         {children}
       </body>
+      <Footer />
       <GoogleAnalytics gaId={GA} />
     </html>
   );

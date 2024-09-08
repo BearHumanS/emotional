@@ -57,10 +57,6 @@ export default function MainComponent() {
           keyword={keyword}
         />
       </div>
-
-      <div className="absolute bottom-2 text-slate-300">
-        Copyright 2024. BearHumanS all rights reserved.
-      </div>
     </div>
   );
 }
