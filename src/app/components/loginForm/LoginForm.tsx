@@ -18,7 +18,7 @@ function LoginForm() {
     setUserPassword(e.target.value);
   };
 
-  const onRegisterSubmit = async (e: FormEvent) => {
+  const onLoginSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     if (userId && userPassword) {
@@ -37,31 +37,45 @@ function LoginForm() {
   };
 
   return (
-    <form onSubmit={onRegisterSubmit}>
-      <div>
-        <label htmlFor="id">ID</label>
-        <input
-          type="text"
-          id="id"
-          placeholder="ex) example@example.com"
-          value={userId}
-          onChange={onIdChange}
-          required
-        />
-      </div>
-      <div>
-        <label htmlFor="password">Password</label>
-        <input
-          type="text"
-          id="password"
-          placeholder="Enter your password"
-          value={userPassword}
-          onChange={onPasswordChange}
-          required
-        />
-      </div>
-      <button type="submit">로그인</button>
-    </form>
+    <section>
+      <h2 className="text-white text-4xl mb-24 flex justify-center">로그인</h2>
+      <form onSubmit={onLoginSubmit} className="flex flex-col gap-4 w-[305px]">
+        <div>
+          <label htmlFor="id" className="text-white">
+            ID
+          </label>
+          <input
+            type="text"
+            id="id"
+            placeholder="ex) example@example.com"
+            value={userId}
+            onChange={onIdChange}
+            required
+            className="w-full mt-2 p-2 rounded-lg"
+          />
+        </div>
+        <div>
+          <label htmlFor="password" className="text-white">
+            Password
+          </label>
+          <input
+            type="password"
+            id="password"
+            placeholder="Enter your password"
+            value={userPassword}
+            onChange={onPasswordChange}
+            required
+            className="w-full mt-2 p-2 rounded-lg"
+          />
+        </div>
+        <button
+          type="submit"
+          className="mt-4 bg-gray-200 text-black font-semibold py-3 rounded-lg w-full hover:text-gray-200 hover:bg-black transition-colors duration-300"
+        >
+          로그인
+        </button>
+      </form>
+    </section>
   );
 }
 

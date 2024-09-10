@@ -14,7 +14,7 @@ function RegisterForm() {
 
   const validateEmail = () => {
     if (!emailRegex.test(userId)) {
-      setErrors((prev) => ({ ...prev, id: '이메일 형식에 맞지않습니다.' }));
+      setErrors((prev) => ({ ...prev, id: '이메일 형식에 맞지 않습니다.' }));
     } else {
       setErrors((prev) => ({ ...prev, id: '' }));
     }
@@ -52,7 +52,7 @@ function RegisterForm() {
           password: userPassword,
         });
 
-        router.push('/');
+        router.push('/auth#login');
       } catch (error) {
         console.error('회원가입 실패:', error);
         alert('회원가입에 실패했습니다. 다시 시도해주세요.');
@@ -61,35 +61,56 @@ function RegisterForm() {
   };
 
   return (
-    <form onSubmit={onRegisterSubmit}>
-      <div>
-        <label htmlFor="id">ID</label>
-        <input
-          type="text"
-          id="id"
-          placeholder="ex) example@example.com"
-          value={userId}
-          onChange={onIdChange}
-          required
-        />
-        {errors.id && <span style={{ color: 'red' }}>{errors.id}</span>}
-      </div>
-      <div>
-        <label htmlFor="password">Password</label>
-        <input
-          type="text"
-          id="password"
-          placeholder="Enter your password"
-          value={userPassword}
-          onChange={onPasswordChange}
-          required
-        />
-        {errors.password && (
-          <span style={{ color: 'red' }}>{errors.password}</span>
-        )}
-      </div>
-      <button type="submit">회원가입</button>
-    </form>
+    <section>
+      <h2 className="text-white text-4xl mb-24 flex justify-center">
+        회원가입
+      </h2>
+      <form
+        onSubmit={onRegisterSubmit}
+        className="flex flex-col gap-4 w-[305px]"
+      >
+        <div className="w-full">
+          <label htmlFor="id" className="text-white">
+            ID
+          </label>
+          <input
+            type="text"
+            id="id"
+            placeholder="ex) example@example.com"
+            value={userId}
+            onChange={onIdChange}
+            required
+            className="w-full mt-2 p-2 rounded-lg"
+          />
+          {errors.id && (
+            <span className="text-red-500 font-bold">{errors.id}</span>
+          )}
+        </div>
+        <div>
+          <label htmlFor="password" className="text-white">
+            Password
+          </label>
+          <input
+            type="password"
+            id="password"
+            placeholder="Enter your password"
+            value={userPassword}
+            onChange={onPasswordChange}
+            required
+            className="w-full mt-2 p-2 rounded-lg"
+          />
+          {errors.password && (
+            <span className="text-red-500 font-bold">{errors.password}</span>
+          )}
+        </div>
+        <button
+          type="submit"
+          className="mt-4 bg-gray-200 text-black font-semibold py-3 rounded-lg w-full hover:text-gray-200 hover:bg-black transition-colors duration-300"
+        >
+          회원가입
+        </button>
+      </form>
+    </section>
   );
 }
 
