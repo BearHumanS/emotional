@@ -30,6 +30,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-          source-dir: './out' # 빌드된 정적 파일 경로
+          source-dir: './out'
           destination-bucket: ${{ secrets.S3_BUCKET }}
           delete-removed: true
