@@ -10,6 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Check S3 Bucket
+        run: |
+          echo "S3 Bucket: ${{ secrets.S3_BUCKET }}"
+
       - uses: jakejarvis/s3-sync-action@master
         with:
           args: --acl public-read --follow-symlinks --delete
