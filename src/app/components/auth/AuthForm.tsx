@@ -48,9 +48,9 @@ const AuthForm = () => {
 
   return (
     //s
-    <section className="flex justify-center items-center min-h-screen h-full">
+    <section className="h-full flex justify-center items-center min-h-screen">
       <div
-        className={`relative w-[460px] h-full ${isLoginActive ? 'bg-indigo-600' : 'bg-purple-500'}  rounded-lg p-8 overflow-hidden shadow-md flex justify-center items-center transition-colors duration-500`}
+        className={`relative h-full w-[460px] ${isLoginActive ? 'bg-indigo-600' : 'bg-purple-500'}  rounded-lg p-8 overflow-hidden shadow-md flex justify-center items-center transition-colors duration-500`}
       >
         {/* 로그인 폼 */}
         <article className={`${isLoginActive ? 'block' : 'hidden'} mb-24`}>
