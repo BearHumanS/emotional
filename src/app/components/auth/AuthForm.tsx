@@ -47,7 +47,6 @@ const AuthForm = () => {
   }
 
   return (
-    //
     <section className="flex justify-center items-center min-h-screen">
       <div
         className={`relative w-[460px] h-full ${isLoginActive ? 'bg-indigo-600' : 'bg-purple-500'}  rounded-lg p-8 overflow-hidden shadow-md flex justify-center items-center transition-colors duration-500`}
