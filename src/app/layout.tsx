@@ -55,8 +55,8 @@ export default function Layout({
           }}
         />
         {children}
+        <Footer />
       </body>
-      <Footer />
       <GoogleAnalytics gaId={GA} />
     </html>
   );
