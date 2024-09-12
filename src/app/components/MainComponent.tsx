@@ -23,7 +23,7 @@ export default function MainComponent() {
   const text = 'Emotional';
 
   return (
-    <div className="flex flex-col min-h-screen-minus-40 w-full items-center justify-center gap-4 p-4 lg:p-8">
+    <div className="flex flex-col min-h-screen-minus-40 w-[400px] items-center justify-center gap-4 p-4 lg:p-8">
       <div className="grid gap-4 text-center">
         <a href="https://www.emotional.today/">
           <h1 className="text-5xl leading-[3vw] font-extrabold">
