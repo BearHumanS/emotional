@@ -3,32 +3,93 @@
 import { fetchRegister } from '@/app/api/userApi';
 import { emailRegex, passwordRegex } from '@/lib/constants/constants';
 import { useRouter } from 'next/navigation';
-import { ChangeEvent, FormEvent, useState } from 'react';
+import {
+  ChangeEvent,
+  FormEvent,
+  useState,
+  forwardRef,
+  useImperativeHandle,
+  useEffect,
+} from 'react';
 
-function RegisterForm() {
+const RegisterForm = forwardRef((_, ref) => {
   const [userId, setUserId] = useState('');
   const [userPassword, setUserPassword] = useState('');
   const [errors, setErrors] = useState({ id: '', password: '' });
 
+  const [debouncedEmail, setDebouncedEmail] = useState(userId);
+  const [debouncedPassword, setDebouncedPassword] = useState(userPassword);
+
   const router = useRouter();
 
-  const validateEmail = () => {
-    if (!emailRegex.test(userId)) {
+  useImperativeHandle(ref, () => ({
+    resetForm() {
+      setUserId('');
+      setUserPassword('');
+      setErrors({ id: '', password: '' });
+    },
+  }));
+
+  // 이메일과 비밀번호에 대한 디바운스 로직 적용
+  useEffect(() => {
+    const emailHandler = setTimeout(() => {
+      setDebouncedEmail(userId);
+    }, 300);
+
+    return () => {
+      clearTimeout(emailHandler);
+    };
+  }, [userId]);
+
+  useEffect(() => {
+    const passwordHandler = setTimeout(() => {
+      setDebouncedPassword(userPassword);
+    }, 300);
+
+    return () => {
+      clearTimeout(passwordHandler);
+    };
+  }, [userPassword]);
+
+  useEffect(() => {
+    // 디바운스된 이메일이 있을 때만 유효성 검사
+    if (debouncedEmail !== '') {
+      validateEmail(debouncedEmail);
+    } else {
+      setErrors((prev) => ({ ...prev, id: '' })); // 값이 없으면 에러 없애기
+    }
+  }, [debouncedEmail]);
+
+  useEffect(() => {
+    // 디바운스된 비밀번호가 있을 때만 유효성 검사
+    if (debouncedPassword !== '') {
+      validatePassword(debouncedPassword);
+    } else {
+      setErrors((prev) => ({ ...prev, password: '' })); // 값이 없으면 에러 없애기
+    }
+  }, [debouncedPassword]);
+
+  const validateEmail = (email: string) => {
+    if (!emailRegex.test(email)) {
       setErrors((prev) => ({ ...prev, id: '이메일 형식에 맞지 않습니다.' }));
+      return false;
     } else {
       setErrors((prev) => ({ ...prev, id: '' }));
+      return true;
     }
   };
 
-  const validatePassword = () => {
-    if (!passwordRegex.test(userPassword)) {
+  const validatePassword = (password: string) => {
+    if (!passwordRegex.test(password)) {
       setErrors((prev) => ({
         ...prev,
         password:
           '비밀번호는 문자, 숫자, 특수 문자를 포함하여 8자 이상이어야 합니다.',
       }));
+      return false;
     } else {
       setErrors((prev) => ({ ...prev, password: '' }));
+      return true;
     }
   };
 
@@ -42,14 +103,19 @@ function RegisterForm() {
 
   const onRegisterSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    validateEmail();
-    validatePassword();
 
-    if (!errors.id && !errors.password) {
+    const isEmailValid = validateEmail(debouncedEmail);
+    const isPasswordValid = validatePassword(debouncedPassword);
+
+    if (!isEmailValid || !isPasswordValid) {
+      return;
+    }
+
+    if (debouncedEmail && debouncedPassword) {
       try {
         await fetchRegister({
-          email: userId,
-          password: userPassword,
+          email: debouncedEmail,
+          password: debouncedPassword,
         });
 
         router.push('/auth#login');
@@ -69,40 +135,47 @@ function RegisterForm() {
         onSubmit={onRegisterSubmit}
         className="flex flex-col gap-4 w-[305px]"
       >
-        <div className="w-full">
-          <label htmlFor="id" className="text-white">
-            ID
-          </label>
+        <div className="relative group">
           <input
             type="text"
-            id="id"
-            placeholder="ex) example@example.com"
+            id="register-id"
+            placeholder=" "
             value={userId}
             onChange={onIdChange}
             required
-            className="w-full mt-2 p-2 rounded-lg"
+            className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 outline-none peer mt-2"
           />
+          <label
+            htmlFor="register-id"
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 transition-all duration-300 ease-in-out peer-placeholder-shown:top-[60%] peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-[-2px] peer-focus:text-sm peer-focus:text-yellow-500 peer-valid:top-[-2px] peer-valid:text-sm peer-valid:text-white peer-focus:left-1 peer-valid:left-1"
+          >
+            ID
+          </label>
           {errors.id && (
-            <span className="text-red-500 font-bold">{errors.id}</span>
+            <span className="text-yellow-500 font-bold">{errors.id}</span>
           )}
         </div>
-        <div>
-          <label htmlFor="password" className="text-white">
-            Password
-          </label>
+        <div className="relative group">
           <input
             type="password"
-            id="password"
-            placeholder="Enter your password"
+            id="register-password"
+            placeholder=" "
             value={userPassword}
             onChange={onPasswordChange}
             required
-            className="w-full mt-2 p-2 rounded-lg"
+            className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 outline-none peer mt-2"
           />
+          <label
+            htmlFor="register-password"
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 transition-all duration-300 ease-in-out peer-placeholder-shown:top-[60%] peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-[-2px] peer-focus:text-sm peer-focus:text-yellow-500 peer-valid:top-[-2px] peer-valid:text-sm peer-valid:text-white peer-focus:left-1 peer-valid:left-1"
+          >
+            Password
+          </label>
           {errors.password && (
-            <span className="text-red-500 font-bold">{errors.password}</span>
+            <span className="text-yellow-500 font-bold">{errors.password}</span>
           )}
         </div>
+
         <button
           type="submit"
           className="mt-4 bg-gray-200 text-black font-semibold py-3 rounded-lg w-full hover:text-gray-200 hover:bg-black transition-colors duration-300"
@@ -112,6 +185,8 @@ function RegisterForm() {
       </form>
     </section>
   );
-}
+});
+
+RegisterForm.displayName = 'RegisterForm';
 
 export default RegisterForm;
