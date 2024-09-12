@@ -16,6 +16,10 @@ const config: Config = {
       minHeight: {
         'screen-minus-40': 'calc(100vh - 40px)',
       },
+      fontVariationSettings: {
+        normal: "'wght' 100, 'wdth' 85",
+        'bold-wide': "'wght' 700, 'wdth' 200",
+      },
     },
   },
   plugins: [],
