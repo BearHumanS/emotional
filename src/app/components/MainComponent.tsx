@@ -20,11 +20,23 @@ export default function MainComponent() {
   const [error, setError] = useState<string | null>(null);
   const [listening, setListening] = useState<boolean>(false);
 
+  const text = 'Emotional';
+
   return (
     <div className="flex flex-col min-h-screen-minus-40 w-full items-center justify-center gap-4 p-4 lg:p-8">
       <div className="grid gap-4 text-center">
         <a href="https://www.emotional.today/">
-          <h1 className="text-3xl font-bold">Emotional</h1>
+          <h1 className="text-5xl leading-[3vw] font-extrabold">
+            {text.split('').map((char, index) => (
+              <span
+                key={index}
+                className="char"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                {char}
+              </span>
+            ))}
+          </h1>
         </a>
         <p className="text-xs text-gray-500 dark:text-gray-400 text">
           자신의 감정을 표현하면 그에 맞는 추천 노래 Playlist를 알려드려요.
