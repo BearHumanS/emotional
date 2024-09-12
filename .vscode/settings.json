@@ -5,5 +5,6 @@
   "eslint.nodePath": "node_modules",
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
-  "prettier.prettierPath": "node_modules/prettier/index.cjs"
+  "prettier.prettierPath": "node_modules/prettier/index.cjs",
+  "editor.wordWrap": "on"
 }
