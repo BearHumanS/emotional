@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-const API_URL = process.env.NEXT_PUBLIC_BBASE_API_URL;
+const API_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
 
 const axiosConfig_Lambda = {
   baseURL: BASE_URL,
