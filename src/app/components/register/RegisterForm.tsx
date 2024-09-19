@@ -52,20 +52,18 @@ const RegisterForm = forwardRef((_, ref) => {
   }, [userPassword]);
 
   useEffect(() => {
-    // 디바운스된 이메일이 있을 때만 유효성 검사
     if (debouncedEmail !== '') {
       validateEmail(debouncedEmail);
     } else {
-      setErrors((prev) => ({ ...prev, id: '' })); // 값이 없으면 에러 없애기
+      setErrors((prev) => ({ ...prev, id: '' }));
     }
   }, [debouncedEmail]);
 
   useEffect(() => {
-    // 디바운스된 비밀번호가 있을 때만 유효성 검사
     if (debouncedPassword !== '') {
       validatePassword(debouncedPassword);
     } else {
-      setErrors((prev) => ({ ...prev, password: '' })); // 값이 없으면 에러 없애기
+      setErrors((prev) => ({ ...prev, password: '' }));
     }
   }, [debouncedPassword]);
 
@@ -125,6 +123,19 @@ const RegisterForm = forwardRef((_, ref) => {
       }
     }
   };
+
+  useEffect(() => {
+    const inputs = document.querySelectorAll('input');
+
+    inputs.forEach((input) => {
+      if (input.value !== '') {
+        const label = input.nextElementSibling;
+        if (label) {
+          label.classList.add('peer-valid');
+        }
+      }
+    });
+  }, []);
 
   return (
     <section>
