@@ -51,3 +51,14 @@ export const fetchLogOut = async () => {
     throw new Error('로그아웃 요청 실패');
   }
 };
+
+export const fetchUser = async () => {
+  try {
+    const res = await fetchData('/protected', 'get', true);
+
+    return res;
+  } catch (error) {
+    console.error('사용자 인증 실패:', error);
+    throw new Error('사용자 인증 실패');
+  }
+};
