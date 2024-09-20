@@ -8,6 +8,7 @@ import {
   useState,
   forwardRef,
   useImperativeHandle,
+  useEffect,
 } from 'react';
 
 const LoginForm = forwardRef((_, ref) => {
@@ -48,6 +49,19 @@ const LoginForm = forwardRef((_, ref) => {
       }
     }
   };
+
+  useEffect(() => {
+    const inputs = document.querySelectorAll('input');
+
+    inputs.forEach((input) => {
+      if (input.value !== '') {
+        const label = input.nextElementSibling;
+        if (label) {
+          label.classList.add('peer-valid');
+        }
+      }
+    });
+  }, []);
 
   return (
     <section>
