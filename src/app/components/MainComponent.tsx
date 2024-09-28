@@ -4,13 +4,14 @@ import { useState } from 'react';
 import SttComponent from './SttComponent';
 import PromptComponent from './PromptComponent';
 import SearcResultComponent from './SearcResultComponent';
+import WithAuth from '@/lib/util/WithAuth';
 
 export interface Video {
   title: string;
   videoUrl: string;
 }
 
-export default function MainComponent() {
+function MainComponent() {
   const [diaryEntry, setDiaryEntry] = useState<string>('');
   const [videoRecommendation, setVideoRecommendation] = useState<Video | null>(
     null,
@@ -72,3 +73,5 @@ export default function MainComponent() {
     </div>
   );
 }
+
+export default WithAuth(MainComponent);
