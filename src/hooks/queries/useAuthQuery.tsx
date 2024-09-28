@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 export const useAuthQuery = () => {
   const router = useRouter();
 
-  const { data, error, isError } = useQuery({
+  const { data, error, isError, isLoading } = useQuery({
     queryKey: ['auth'],
     queryFn: async () => {
       const response = await fetchUser();
@@ -23,5 +23,5 @@ export const useAuthQuery = () => {
     router.push('/auth');
   }
 
-  return { data, error, isError };
+  return { data, error, isError, isLoading };
 };
