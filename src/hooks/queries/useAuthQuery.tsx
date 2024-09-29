@@ -18,6 +18,9 @@ export const useAuthQuery = () => {
       return response; // response.data 대신 response 전체 반환
     },
     retry: false,
+    staleTime: 1000 * 60 * 5,
+    refetchInterval: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
   });
 
   // 에러 처리 및 리다이렉트 조건 확인
