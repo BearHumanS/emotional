@@ -2,6 +2,7 @@
 
 import { fetchRegister } from '@/app/api/userApi';
 import { emailRegex, passwordRegex } from '@/lib/constants/constants';
+import useShowPasswordStore from '@/lib/store/useShowPasswordStore';
 import { useRouter } from 'next/navigation';
 import {
   ChangeEvent,
@@ -12,6 +13,7 @@ import {
   useEffect,
 } from 'react';
 import { toast } from 'react-toastify';
+import ChangeIcons from '../ChangeIcons';
 
 const RegisterForm = forwardRef((_, ref) => {
   const [userId, setUserId] = useState('');
@@ -20,6 +22,7 @@ const RegisterForm = forwardRef((_, ref) => {
 
   const [debouncedEmail, setDebouncedEmail] = useState(userId);
   const [debouncedPassword, setDebouncedPassword] = useState(userPassword);
+  const { showPassword, setShowPassword } = useShowPasswordStore();
 
   const router = useRouter();
 
@@ -27,6 +30,7 @@ const RegisterForm = forwardRef((_, ref) => {
     resetForm() {
       setUserId('');
       setUserPassword('');
+      setShowPassword(false);
       /* setErrors({ id: '', password: '' }); */
     },
   }));
@@ -143,6 +147,10 @@ const RegisterForm = forwardRef((_, ref) => {
     });
   }, []);
 
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
+
   return (
     <section>
       <h2 className="text-white text-4xl mb-24 flex justify-center">
@@ -174,7 +182,7 @@ const RegisterForm = forwardRef((_, ref) => {
         </div>
         <div className="relative group">
           <input
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             id="register-password"
             placeholder=" "
             value={userPassword}
@@ -188,6 +196,7 @@ const RegisterForm = forwardRef((_, ref) => {
           >
             Password
           </label>
+          <ChangeIcons onClick={togglePasswordVisibility} />
           {/*   {errors.password && (
             <span className="text-yellow-500 font-bold">{errors.password}</span>
           )} */}
