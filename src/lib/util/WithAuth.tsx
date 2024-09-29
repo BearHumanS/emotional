@@ -13,25 +13,27 @@ const WithAuth = <P extends object>(
     const { data: userData, isError, isLoading } = useAuthQuery();
 
     useEffect(() => {
-      if (!isLoading && (!userData || isError)) {
-        const timer = setTimeout(() => {
-          router.replace('/auth');
-        }, 1000);
+      if (!isLoading) {
+        if (isError || !userData) {
+          const timer = setTimeout(() => {
+            router.replace('/auth');
+          }, 1000);
 
-        return () => clearTimeout(timer);
+          return () => clearTimeout(timer);
+        }
       }
     }, [router, userData, isLoading, isError]);
 
-    // 데이터 로딩 중일 때 로딩 화면을 보여줌
+    // 인증 실패 시 "Redirecting to login..."가 아닌 컴포넌트를 리턴하게 설정
     if (isLoading) {
-      return <>loading</>;
+      return <>Loading...</>;
+    }
+
+    if (isError || !userData) {
+      return <>Redirecting to login...</>;
     }
 
     // 인증된 사용자일 때만 컴포넌트 렌더링
-    if (!userData) {
-      return <>not user</>;
-    }
-
     return <Component {...props} />;
   };
 
