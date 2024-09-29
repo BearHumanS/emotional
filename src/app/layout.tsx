@@ -5,6 +5,7 @@ import { GoogleAnalytics } from '@next/third-parties/google';
 import './globals.css';
 import Footer from './components/footer/Footer';
 import ReactQueryProvider from '@/lib/util/ReactQueryProvider';
+import ToastProvider from '@/lib/util/ToastProvider';
 
 export const metadata = getMetadata();
 
@@ -55,6 +56,7 @@ export default function Layout({
             __html: JSON.stringify(jsonLd),
           }}
         />
+        <ToastProvider />
         <ReactQueryProvider>
           {children}
           <Footer />
