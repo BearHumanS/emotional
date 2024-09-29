@@ -20,6 +20,9 @@ const config: Config = {
         normal: "'wght' 100, 'wdth' 85",
         'bold-wide': "'wght' 700, 'wdth' 200",
       },
+      dropShadow: {
+        custom: '0px 0px 12px #334155',
+      },
     },
   },
   plugins: [],
