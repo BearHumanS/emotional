@@ -10,6 +10,7 @@ import {
   useImperativeHandle,
   useEffect,
 } from 'react';
+import { toast } from 'react-toastify';
 
 const LoginForm = forwardRef((_, ref) => {
   const [userId, setUserId] = useState('');
@@ -42,10 +43,11 @@ const LoginForm = forwardRef((_, ref) => {
           password: userPassword,
         });
 
+        toast.success('로그인에 성공했습니다.');
         router.push('/');
       } catch (error) {
         console.error('로그인에 실패:', error);
-        alert('로그인에 실패했습니다. 다시 시도해주세요.');
+        toast.error('로그인에 실패했습니다. 다시 시도해주세요.');
       }
     }
   };

@@ -11,11 +11,12 @@ import {
   useImperativeHandle,
   useEffect,
 } from 'react';
+import { toast } from 'react-toastify';
 
 const RegisterForm = forwardRef((_, ref) => {
   const [userId, setUserId] = useState('');
   const [userPassword, setUserPassword] = useState('');
-  const [errors, setErrors] = useState({ id: '', password: '' });
+  /*  const [errors, setErrors] = useState({ id: '', password: '' }); */
 
   const [debouncedEmail, setDebouncedEmail] = useState(userId);
   const [debouncedPassword, setDebouncedPassword] = useState(userPassword);
@@ -26,7 +27,7 @@ const RegisterForm = forwardRef((_, ref) => {
     resetForm() {
       setUserId('');
       setUserPassword('');
-      setErrors({ id: '', password: '' });
+      /* setErrors({ id: '', password: '' }); */
     },
   }));
 
@@ -34,7 +35,7 @@ const RegisterForm = forwardRef((_, ref) => {
   useEffect(() => {
     const emailHandler = setTimeout(() => {
       setDebouncedEmail(userId);
-    }, 300);
+    }, 500);
 
     return () => {
       clearTimeout(emailHandler);
@@ -44,7 +45,7 @@ const RegisterForm = forwardRef((_, ref) => {
   useEffect(() => {
     const passwordHandler = setTimeout(() => {
       setDebouncedPassword(userPassword);
-    }, 300);
+    }, 500);
 
     return () => {
       clearTimeout(passwordHandler);
@@ -55,7 +56,7 @@ const RegisterForm = forwardRef((_, ref) => {
     if (debouncedEmail !== '') {
       validateEmail(debouncedEmail);
     } else {
-      setErrors((prev) => ({ ...prev, id: '' }));
+      /* setErrors((prev) => ({ ...prev, id: '' })); */
     }
   }, [debouncedEmail]);
 
@@ -63,30 +64,34 @@ const RegisterForm = forwardRef((_, ref) => {
     if (debouncedPassword !== '') {
       validatePassword(debouncedPassword);
     } else {
-      setErrors((prev) => ({ ...prev, password: '' }));
+      /* setErrors((prev) => ({ ...prev, password: '' })); */
     }
   }, [debouncedPassword]);
 
   const validateEmail = (email: string) => {
     if (!emailRegex.test(email)) {
-      setErrors((prev) => ({ ...prev, id: '이메일 형식에 맞지 않습니다.' }));
+      /* setErrors((prev) => ({ ...prev, id: '이메일 형식에 맞지 않습니다.' })); */
+      toast.warn('이메일 형식에 맞지 않습니다.');
       return false;
     } else {
-      setErrors((prev) => ({ ...prev, id: '' }));
+      /* setErrors((prev) => ({ ...prev, id: '' })); */
       return true;
     }
   };
 
   const validatePassword = (password: string) => {
     if (!passwordRegex.test(password)) {
-      setErrors((prev) => ({
+      /* setErrors((prev) => ({
         ...prev,
         password:
           '비밀번호는 문자, 숫자, 특수 문자를 포함하여 8자 이상이어야 합니다.',
-      }));
+      })); */
+      toast.warn(
+        '비밀번호는 문자, 숫자, 특수 문자를 포함하여 8자 이상이어야 합니다.',
+      );
       return false;
     } else {
-      setErrors((prev) => ({ ...prev, password: '' }));
+      /* setErrors((prev) => ({ ...prev, password: '' })); */
       return true;
     }
   };
@@ -116,10 +121,11 @@ const RegisterForm = forwardRef((_, ref) => {
           password: debouncedPassword,
         });
 
-        router.push('/auth#login');
+        toast.success('회원가입을 환경합니다! 로그인해주세요!');
+        router.push('/');
       } catch (error) {
         console.error('회원가입 실패:', error);
-        alert('회원가입에 실패했습니다. 다시 시도해주세요.');
+        toast.error('회원가입에 실패했습니다. 다시 시도해주세요.');
       }
     }
   };
@@ -162,9 +168,9 @@ const RegisterForm = forwardRef((_, ref) => {
           >
             ID
           </label>
-          {errors.id && (
+          {/*  {errors.id && (
             <span className="text-yellow-500 font-bold">{errors.id}</span>
-          )}
+          )} */}
         </div>
         <div className="relative group">
           <input
@@ -182,9 +188,9 @@ const RegisterForm = forwardRef((_, ref) => {
           >
             Password
           </label>
-          {errors.password && (
+          {/*   {errors.password && (
             <span className="text-yellow-500 font-bold">{errors.password}</span>
-          )}
+          )} */}
         </div>
 
         <button
