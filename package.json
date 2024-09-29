@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@next/third-parties": "14.0.5-canary.38",
+    "@react-icons/all-files": "^4.1.0",
     "@tanstack/react-query": "^5.56.1",
     "axios": "^1.6.8",
     "googleapis": "^134.0.0",
