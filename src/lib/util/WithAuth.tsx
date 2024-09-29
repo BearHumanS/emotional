@@ -3,6 +3,8 @@
 import { useRouter } from 'next/navigation';
 import { FunctionComponent, useEffect, ComponentType } from 'react';
 import { useAuthQuery } from '@/hooks/queries/useAuthQuery';
+import LoadingComponent from '@/app/components/LoadingComponent';
+import RedirectComponent from '@/app/components/RedirectComponent';
 
 const WithAuth = <P extends object>(
   Component: ComponentType<P>,
@@ -17,20 +19,15 @@ const WithAuth = <P extends object>(
         if (isError || !userData) {
           const timer = setTimeout(() => {
             router.replace('/auth');
-          }, 1000);
+          }, 2500);
 
           return () => clearTimeout(timer);
         }
       }
     }, [router, userData, isLoading, isError]);
 
-    // 인증 실패 시 "Redirecting to login..."가 아닌 컴포넌트를 리턴하게 설정
-    if (isLoading) {
-      return <>Loading...</>;
-    }
-
     if (isError || !userData) {
-      return <>Redirecting to login...</>;
+      return <RedirectComponent />;
     }
 
     // 인증된 사용자일 때만 컴포넌트 렌더링
