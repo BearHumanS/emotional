@@ -18,7 +18,6 @@ function MainComponent() {
   );
   const [keyword, setKeyword] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
   const [listening, setListening] = useState<boolean>(false);
 
   const text = 'Emotional';
@@ -27,7 +26,7 @@ function MainComponent() {
     <div className="flex flex-col min-h-screen-minus-40 w-[400px] items-center justify-center gap-4 p-4 lg:p-8">
       <div className="grid gap-4 text-center">
         <a href="https://www.emotional.today/">
-          <h1 className="text-5xl leading-[3vw] font-extrabold">
+          <h1 className="text-5xl leading-[3vw] font-extrabold drop-shadow-custom">
             {text.split('').map((char, index) => (
               <span
                 key={index}
@@ -49,7 +48,6 @@ function MainComponent() {
           setDiaryEntry={setDiaryEntry}
           setListening={setListening}
           listening={listening}
-          setError={setError}
         />
 
         <PromptComponent
@@ -57,13 +55,10 @@ function MainComponent() {
           setDiaryEntry={setDiaryEntry}
           setVideoRecommendation={setVideoRecommendation}
           setKeyword={setKeyword}
-          setError={setError}
           setIsLoading={setIsLoading}
           isLoading={isLoading}
           listening={listening}
         />
-
-        {error && <p className="text-red-500 w-80">{error}</p>}
 
         <SearcResultComponent
           videoRecommendation={videoRecommendation}

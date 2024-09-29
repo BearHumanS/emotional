@@ -1,6 +1,9 @@
 import { ChangeEvent, Dispatch, SetStateAction } from 'react';
 import { analyzeDiary } from '../api/analyze/analyze';
 import { fetchYoutubeVideos } from '../api/video/video';
+import UseAnimations from 'react-useanimations';
+import activity from 'react-useanimations/lib/activity';
+import { toast } from 'react-toastify';
 
 interface Video {
   title: string;
@@ -12,7 +15,6 @@ interface PromptComponentProps {
   setDiaryEntry: Dispatch<SetStateAction<string>>;
   setVideoRecommendation: Dispatch<SetStateAction<Video | null>>;
   setKeyword: Dispatch<SetStateAction<string | null>>;
-  setError: Dispatch<SetStateAction<string | null>>;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   isLoading: boolean;
   listening: boolean;
@@ -23,18 +25,17 @@ export default function PromptComponent({
   setDiaryEntry,
   setVideoRecommendation,
   setKeyword,
-  setError,
   setIsLoading,
   isLoading,
   listening,
 }: PromptComponentProps) {
   const analyzeDiaryAndFetchVideos = async (retryCount = 0) => {
     if (!diaryEntry.trim()) {
-      setError('일기 내용을 입력해주세요.');
+      toast.error('일기 내용을 입력해주세요.');
       return;
     }
     setIsLoading(true);
-    setError(null);
+
     try {
       const keyword = await analyzeDiary(diaryEntry);
       setKeyword(keyword);
@@ -47,14 +48,16 @@ export default function PromptComponent({
           videoUrl: `https://www.youtube.com/watch?v=${randomVideo.id.videoId}`,
         });
       } else if (retryCount < 5) {
-        setError('추천 PLAYLIST를 찾을 수 없습니다. 다시 분석을 시도합니다.');
+        toast.error(
+          '추천 PLAYLIST를 찾을 수 없습니다. 다시 분석을 시도합니다.',
+        );
         analyzeDiaryAndFetchVideos(retryCount + 1);
       } else {
-        setError('추천 PLAYLIST를 찾을 수 없습니다. 다시 입력해주세요.');
+        toast.error('추천 PLAYLIST를 찾을 수 없습니다. 다시 입력해주세요.');
       }
     } catch (error) {
       console.error('Error fetching data:', error);
-      setError('페이지의 총 하루 할당량이 초과되었습니다.');
+      toast.error('다시 시도해주세요.');
     }
     setIsLoading(false);
   };
@@ -81,7 +84,13 @@ export default function PromptComponent({
           onClick={() => analyzeDiaryAndFetchVideos(0)}
           disabled={isLoading || listening}
         >
-          {isLoading ? '분석 중...' : '분석'}
+          {isLoading ? (
+            <div className="flex items-center justify-center opacity-100">
+              <UseAnimations animation={activity} size={28} strokeColor="red" />
+            </div>
+          ) : (
+            '분석'
+          )}
         </button>
       </div>
     </div>
