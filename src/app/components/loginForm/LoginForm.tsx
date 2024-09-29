@@ -10,11 +10,14 @@ import {
   useImperativeHandle,
   useEffect,
 } from 'react';
+import ChangeIcons from '../ChangeIcons';
 import { toast } from 'react-toastify';
+import useShowPasswordStore from '@/lib/store/useShowPasswordStore';
 
 const LoginForm = forwardRef((_, ref) => {
   const [userId, setUserId] = useState('');
   const [userPassword, setUserPassword] = useState('');
+  const { showPassword, setShowPassword } = useShowPasswordStore();
 
   const router = useRouter();
 
@@ -22,6 +25,7 @@ const LoginForm = forwardRef((_, ref) => {
     resetForm() {
       setUserId('');
       setUserPassword('');
+      setShowPassword(false);
     },
   }));
 
@@ -65,6 +69,10 @@ const LoginForm = forwardRef((_, ref) => {
     });
   }, []);
 
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
+
   return (
     <section>
       <h2 className="text-white text-4xl mb-24 flex justify-center">로그인</h2>
@@ -88,7 +96,7 @@ const LoginForm = forwardRef((_, ref) => {
         </div>
         <div className="relative group">
           <input
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             id="password"
             placeholder=" "
             value={userPassword}
@@ -102,6 +110,7 @@ const LoginForm = forwardRef((_, ref) => {
           >
             Password
           </label>
+          <ChangeIcons onClick={togglePasswordVisibility} />
         </div>
 
         <button
