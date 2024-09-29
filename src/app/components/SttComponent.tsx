@@ -1,18 +1,17 @@
 import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { Video } from './MainComponent';
+import { toast } from 'react-toastify';
 
 interface SttComponentProps {
   setDiaryEntry: Dispatch<SetStateAction<string>>;
   setListening: Dispatch<SetStateAction<boolean>>;
   listening: boolean;
-  setError: Dispatch<SetStateAction<string | null>>;
 }
 
 export default function SttComponent({
   setDiaryEntry,
   setListening,
   listening,
-  setError,
 }: SttComponentProps) {
   const [recognition, setRecognition] = useState<SpeechRecognition | null>(
     null,
@@ -40,7 +39,7 @@ export default function SttComponent({
 
       recognition.onerror = (event: any) => {
         console.error('Speech recognition error:', event.error);
-        setError('음성 인식 중 오류가 발생했습니다. 다시 시도해주세요.');
+        toast.error('음성 인식 중 오류가 발생했습니다. 다시 시도해주세요.');
         setListening(false);
       };
 
@@ -51,16 +50,15 @@ export default function SttComponent({
       setRecognition(recognition);
     } else {
       console.error('Web Speech API is not supported in this browser.');
-      setError('이 브라우저에서는 음성 인식을 지원하지 않습니다.');
+      toast.error('이 브라우저에서는 음성 인식을 지원하지 않습니다.');
     }
-  }, [setDiaryEntry, setError, setListening]);
+  }, [setDiaryEntry, setListening]);
 
   const startListening = () => {
     if (recognition) {
       setDiaryEntry('');
       recognition.start();
       setListening(true);
-      setError(null);
     }
   };
 
