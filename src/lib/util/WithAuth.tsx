@@ -3,7 +3,6 @@
 import { useRouter } from 'next/navigation';
 import { FunctionComponent, useEffect, ComponentType } from 'react';
 import { useAuthQuery } from '@/hooks/queries/useAuthQuery';
-import LoadingComponent from '@/app/components/LoadingComponent';
 import RedirectComponent from '@/app/components/RedirectComponent';
 
 const WithAuth = <P extends object>(

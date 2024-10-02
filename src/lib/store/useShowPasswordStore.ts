@@ -1,13 +1,13 @@
 import { create } from 'zustand';
 
-interface userIsLoadingStoreProps {
+interface useShowPasswordStoreProps {
   showPassword: boolean;
   setShowPassword: (
     showPassword: boolean | ((prev: boolean) => boolean),
   ) => void;
 }
 
-const useShowPasswordStore = create<userIsLoadingStoreProps>((set) => ({
+const useShowPasswordStore = create<useShowPasswordStoreProps>((set) => ({
   showPassword: false,
   setShowPassword: (showPassword) =>
     set((state) => ({
