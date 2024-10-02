@@ -115,7 +115,7 @@ const LoginForm = forwardRef((_, ref) => {
           >
             Password
           </label>
-          <ChangeIcons onClick={togglePasswordVisibility} />
+          <ChangeIcons onClick={togglePasswordVisibility} show={showPassword} />
         </div>
 
         <button

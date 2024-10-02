@@ -4,8 +4,8 @@ import { fetchData } from './fetchData';
 export type fetchUserDataProps = {
   email: string;
   password: string;
-  confirmPassword: string;
-  verificationCode: string;
+  confirmPassword?: string;
+  verificationCode?: string;
 };
 
 export const fetchRegister = async ({
