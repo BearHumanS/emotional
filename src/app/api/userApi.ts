@@ -1,26 +1,34 @@
+import { isAxiosError } from 'axios';
 import { fetchData } from './fetchData';
 
-type fetchUserDataProps = {
+export type fetchUserDataProps = {
   email: string;
   password: string;
+  confirmPassword: string;
+  verificationCode: string;
 };
 
 export const fetchRegister = async ({
   email,
   password,
+  confirmPassword,
+  verificationCode,
 }: fetchUserDataProps) => {
   try {
     const res = await fetchData(
       `/users/register`,
       'post',
-      { email, password },
+      { email, password, confirmPassword, verificationCode },
       true,
     );
 
     return res;
-  } catch (error) {
-    console.error('회원가입 실패:', error);
-    throw new Error('회원가입 요청 실패');
+  } catch (error: unknown) {
+    if (isAxiosError(error)) {
+      const errorMessage = error.response?.data?.message;
+      console.error('회원가입 실패:', errorMessage);
+      throw new Error(errorMessage);
+    }
   }
 };
 
@@ -34,16 +42,19 @@ export const fetchLogin = async ({ email, password }: fetchUserDataProps) => {
     );
 
     return res;
-  } catch (error) {
-    console.error('로그인 실패:', error);
-    throw new Error('로그인 요청 실패');
+  } catch (error: unknown) {
+    if (isAxiosError(error)) {
+      const errorMessage = error.response?.data?.message;
+      console.error('회원가입 실패:', errorMessage);
+      throw new Error(errorMessage);
+    }
   }
 };
 
 // 로그아웃은 요청이 실패해도 로그아웃 시킬 것 (쿠키 강제 만료)
 export const fetchLogOut = async () => {
   try {
-    const res = await fetchData('/users/logout', 'post', true);
+    const res = await fetchData('/users/logout', 'post', undefined, true);
     return res;
   } catch (error) {
     console.error('로그아웃 실패:', error);
@@ -62,5 +73,24 @@ export const fetchUser = async () => {
   } catch (error) {
     console.error('사용자 인증 실패:', error);
     throw new Error('사용자 인증 실패');
+  }
+};
+
+export const sendVerification = async (email: string) => {
+  try {
+    const res = await fetchData('/users/verification', 'post', { email }, true);
+
+    return res;
+  } catch (error) {
+    console.error('인증코드 발송 실패:', error);
+    throw new Error('인증코드 발송 실패');
+  }
+};
+
+export const requestCode = async (email: string) => {
+  try {
+  } catch (error) {
+    console.error('이메일 발송 실패:', error);
+    throw new Error('이메일 발송 실패');
   }
 };
