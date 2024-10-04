@@ -81,9 +81,37 @@ export const sendVerification = async (email: string) => {
     const res = await fetchData('/users/verification', 'post', { email }, true);
 
     return res;
-  } catch (error) {
-    console.error('인증코드 발송 실패:', error);
-    throw new Error('인증코드 발송 실패');
+  } catch (error: unknown) {
+    if (isAxiosError(error)) {
+      const errorMessage = error.response?.data?.message;
+      console.error('인증코드 발송 실패:', errorMessage);
+      throw new Error(errorMessage);
+    }
+  }
+};
+
+export const verifyCode = async ({
+  email,
+  verificationCode,
+}: {
+  email: string;
+  verificationCode: string;
+}) => {
+  try {
+    const res = await fetchData(
+      '/users/verify',
+      'post',
+      { email, verificationCode },
+      true,
+    );
+
+    return res;
+  } catch (error: unknown) {
+    if (isAxiosError(error)) {
+      const errorMessage = error.response?.data?.message;
+      console.error('인증 실패:', errorMessage);
+      throw new Error(errorMessage);
+    }
   }
 };
 

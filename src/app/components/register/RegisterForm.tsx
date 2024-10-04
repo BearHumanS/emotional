@@ -1,8 +1,6 @@
 'use client';
 
-import { fetchRegister, sendVerification } from '@/app/api/userApi';
-import { emailRegex, passwordRegex } from '@/lib/constants/constants';
-import useShowPasswordStore from '@/lib/store/useShowPasswordStore';
+import { fetchRegister } from '@/app/api/userApi';
 import { useRouter } from 'next/navigation';
 import {
   ChangeEvent,
@@ -14,23 +12,30 @@ import {
 } from 'react';
 import { toast } from 'react-toastify';
 import ChangeIcons from '../ChangeIcons';
-import { useMutation } from '@tanstack/react-query';
 import UseAnimations from 'react-useanimations';
 import loading from 'react-useanimations/lib/loading';
 import { formatTime } from '@/lib/util/formatTime';
-import useShowConfirmPasswordStore from '@/lib/store/useShowConfirmPasswordStore';
+import {
+  validateEmail,
+  validatePassword,
+  validateConfirmPassword,
+} from '@/lib/util/validators';
+import { useSendVerification } from '@/hooks/queries/useSendVerification';
+import { toggleVisibility } from '@/lib/util/toggleVisibility';
+import { useVerify } from '@/hooks/queries/useVerfy';
 
 const RegisterForm = forwardRef((_, ref) => {
   const [userId, setUserId] = useState('');
   const [userPassword, setUserPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
-  const { showPassword, setShowPassword } = useShowPasswordStore();
-  const { showConfirmPassword, setShowConfirmPassword } =
-    useShowConfirmPasswordStore();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [visiblity, setivsiblity] = useState(false);
   const [timer, setTimer] = useState(300);
   const [isExpired, setIsExpired] = useState(false);
+  const [isResend, setIsResend] = useState(false);
+  const [isVerify, setIsVerify] = useState(false);
 
   const router = useRouter();
 
@@ -44,6 +49,8 @@ const RegisterForm = forwardRef((_, ref) => {
       setivsiblity(false);
       setShowConfirmPassword(false);
       setIsExpired(false);
+      setIsResend(false);
+      setIsVerify(false);
     },
   }));
 
@@ -51,7 +58,7 @@ const RegisterForm = forwardRef((_, ref) => {
   useEffect(() => {
     let counter: string | number | NodeJS.Timeout | undefined;
 
-    if (visiblity && timer > 0) {
+    if (visiblity && timer > 0 && !isVerify) {
       counter = setInterval(() => {
         setTimer((prev) => prev - 1);
       }, 1000);
@@ -61,36 +68,7 @@ const RegisterForm = forwardRef((_, ref) => {
     }
 
     return () => clearInterval(counter);
-  }, [timer, visiblity]);
-
-  const validateEmail = (email: string) => {
-    if (!emailRegex.test(email)) {
-      toast.warn('이메일 형식에 맞지 않습니다.');
-      return false;
-    } else {
-      return true;
-    }
-  };
-
-  const validatePassword = (password: string) => {
-    if (!passwordRegex.test(password)) {
-      toast.warn(
-        '비밀번호는 문자, 숫자, 특수 문자를 포함하여 8자 이상이어야 합니다.',
-      );
-      return false;
-    } else {
-      return true;
-    }
-  };
-
-  const validateConfirmPassword = (password: string) => {
-    if (password !== userPassword) {
-      toast.warn('비밀번호가 일치하지 않습니다.');
-      return false;
-    } else {
-      return true;
-    }
-  };
+  }, [isVerify, timer, visiblity]);
 
   const onIdChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUserId(e.target.value);
@@ -108,24 +86,47 @@ const RegisterForm = forwardRef((_, ref) => {
     setVerificationCode(e.target.value);
   };
 
-  const mutation = useMutation({
-    mutationFn: sendVerification,
-    onSuccess() {
-      if (isExpired) {
-        toast.warn('인증 코드가 만료되었습니다. 다시 요청해주세요.');
-        return;
-      }
-      toast.success('인증 코드를 발송했습니다');
-      setivsiblity(true);
-    },
-    onError() {
-      toast.error('인증 코드 발송에 실패했습니다.');
-      setivsiblity(false);
-    },
+  const sendVerificationMutation = useSendVerification({
+    setivsiblity,
   });
 
   const onSendVerifcation = () => {
-    mutation.mutate(userId);
+    const isEmailValid = validateEmail(userId);
+    if (!isEmailValid) {
+      toast.warn('이메일을 입력해주세요.');
+      return;
+    }
+
+    sendVerificationMutation.mutate(userId, {
+      onSuccess: () => {
+        setIsExpired(false);
+        setTimer(300);
+        setivsiblity(true);
+        setIsResend(true);
+        setIsVerify(false);
+      },
+    });
+  };
+
+  const verifyMutation = useVerify({
+    setIsVerify,
+  });
+
+  const onVerify = () => {
+    if (!verificationCode) {
+      toast.warn('인증코드를 입력해주세요.');
+      return;
+    }
+
+    verifyMutation.mutate(
+      { email: userId, verificationCode },
+      {
+        onSuccess: () => {
+          setIsVerify(true);
+          setIsExpired(false);
+        },
+      },
+    );
   };
 
   const onRegisterSubmit = async (e: FormEvent) => {
@@ -133,7 +134,10 @@ const RegisterForm = forwardRef((_, ref) => {
 
     const isEmailValid = validateEmail(userId);
     const isPasswordValid = validatePassword(userPassword);
-    const isConfirmPasswordValid = validateConfirmPassword(confirmPassword);
+    const isConfirmPasswordValid = validateConfirmPassword(
+      confirmPassword,
+      userPassword,
+    );
 
     if (!isEmailValid || !isPasswordValid || !isConfirmPasswordValid) {
       return;
@@ -167,29 +171,21 @@ const RegisterForm = forwardRef((_, ref) => {
     }
   };
 
-  const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev);
-  };
-
-  const toggleConfirmPasswordVisibility = () => {
-    setShowConfirmPassword((prev) => !prev);
-  };
-
   return (
     <section>
-      <h2 className="text-white text-4xl mb-24 flex justify-center">
+      <h2 className="text-white text-4xl mb-12 flex justify-center">
         회원가입
       </h2>
       <form
         onSubmit={onRegisterSubmit}
         className="flex flex-col gap-4 w-[305px]"
       >
-        <div className="flex justify-between items-center">
-          <div className="relative">
+        <div className="flex justify-between items-center gap-2">
+          <div className="relative w-full">
             <input
               type="text"
               id="register-id"
-              placeholder=" "
+              placeholder="이메일 형식입니다."
               value={userId}
               onChange={onIdChange}
               onBlur={() => validateEmail(userId)}
@@ -198,7 +194,7 @@ const RegisterForm = forwardRef((_, ref) => {
             />
             <label
               htmlFor="register-id"
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 transition-all duration-300 ease-in-out peer-placeholder-shown:top-[60%] peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-[-2px] peer-focus:text-sm peer-focus:text-yellow-500 peer-valid:top-[-2px] peer-valid:text-sm peer-valid:text-white peer-focus:left-1 peer-valid:left-1"
+              className="absolute opacity-0 left-3 top-1/2 transform -translate-y-1/2 text-gray-500 transition-all duration-300 ease-in-out peer-placeholder-shown:top-[60%] peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-[-2px] peer-focus:text-sm peer-focus:text-yellow-500 peer-valid:top-[-2px] peer-valid:text-sm peer-valid:text-white peer-focus:left-1 peer-valid:left-1 peer-focus:opacity-100 peer-valid:opacity-100"
             >
               ID
             </label>
@@ -206,13 +202,15 @@ const RegisterForm = forwardRef((_, ref) => {
           <div className="h-[50px] flex items-end">
             <button
               type="button"
-              disabled={mutation.isPending}
+              disabled={sendVerificationMutation.isPending}
               onClick={onSendVerifcation}
               className={`h-[42px] w-[50px] bg-gray-200 outline-none rounded-lg ${
-                mutation.isPending ? 'cursor-not-allowed' : 'cursor-pointer'
+                sendVerificationMutation.isPending
+                  ? 'cursor-not-allowed'
+                  : 'cursor-pointer'
               } font-semibold hover:text-gray-200 hover:bg-black transtion-color duration-300`}
             >
-              {mutation.isPending ? (
+              {sendVerificationMutation.isPending ? (
                 <div className="flex justify-center">
                   <UseAnimations
                     animation={loading}
@@ -221,6 +219,8 @@ const RegisterForm = forwardRef((_, ref) => {
                     strokeColor="gray"
                   />
                 </div>
+              ) : isResend ? (
+                '재인증'
               ) : (
                 '인증'
               )}
@@ -236,14 +236,43 @@ const RegisterForm = forwardRef((_, ref) => {
               value={verificationCode}
               onChange={onVerificationCodeChange}
               required
-              className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 outline-none peer mt-2"
+              className="w-[50%] p-2 border border-gray-300 rounded-lg bg-gray-100 outline-none peer mt-2"
             />
-            <div className="flex w-[65%] justify-center gap-2">
-              <p className="text-yellow-500">남은 시간:</p>
-              <p className="w-5 text-gray-200">
-                {isExpired ? '만료됨' : `${formatTime(timer)}`}
-              </p>
+            <div className="flex w-[35%] flex-col h-[50px] items-center justify-center">
+              {isVerify ? (
+                <p className="text-gray-200">인증 완료</p>
+              ) : (
+                <>
+                  <p className="text-yellow-500">남은 시간</p>
+                  <p className="text-gray-200">
+                    {isExpired ? '만료됨' : `${formatTime(timer)}`}
+                  </p>
+                </>
+              )}
             </div>
+            <button
+              type="button"
+              onClick={onVerify}
+              disabled={isExpired || isVerify}
+              className={`h-[42px] w-[50px] bg-gray-200 outline-none rounded-lg ${
+                sendVerificationMutation.isPending || isExpired || isVerify
+                  ? 'cursor-not-allowed'
+                  : 'cursor-pointer'
+              } font-semibold  ${!isExpired && 'hover:bg-black hover:text-gray-200'} transtion-color duration-300`}
+            >
+              {verifyMutation.isPending ? (
+                <div className="flex justify-center">
+                  <UseAnimations
+                    animation={loading}
+                    size={24}
+                    speed={2}
+                    strokeColor="gray"
+                  />
+                </div>
+              ) : (
+                '확인'
+              )}
+            </button>
           </div>
         )}
 
@@ -251,7 +280,7 @@ const RegisterForm = forwardRef((_, ref) => {
           <input
             type={showPassword ? 'text' : 'password'}
             id="register-password"
-            placeholder=" "
+            placeholder="영문, 숫자, 특수문자 포함 8글자 이상"
             value={userPassword}
             onChange={onPasswordChange}
             onBlur={() => validatePassword(userPassword)}
@@ -260,11 +289,14 @@ const RegisterForm = forwardRef((_, ref) => {
           />
           <label
             htmlFor="register-password"
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 transition-all duration-300 ease-in-out peer-placeholder-shown:top-[60%] peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-[-2px] peer-focus:text-sm peer-focus:text-yellow-500 peer-valid:top-[-2px] peer-valid:text-sm peer-valid:text-white peer-focus:left-1 peer-valid:left-1"
+            className="absolute opacity-0 left-3 top-1/2 transform -translate-y-1/2 text-gray-500 transition-all duration-300 ease-in-out peer-placeholder-shown:top-[60%] peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-[-2px] peer-focus:text-sm peer-focus:text-yellow-500 peer-valid:top-[-2px] peer-valid:text-sm peer-valid:text-white peer-focus:left-1 peer-valid:left-1 peer-focus:opacity-100 peer-valid:opacity-100"
           >
             Password
           </label>
-          <ChangeIcons onClick={togglePasswordVisibility} show={showPassword} />
+          <ChangeIcons
+            onClick={() => toggleVisibility(setShowPassword)}
+            show={showPassword}
+          />
         </div>
 
         <div className="relative">
@@ -274,7 +306,9 @@ const RegisterForm = forwardRef((_, ref) => {
             placeholder=""
             value={confirmPassword}
             onChange={onConfirmPasswordChange}
-            onBlur={() => validateConfirmPassword(confirmPassword)}
+            onBlur={() =>
+              validateConfirmPassword(confirmPassword, userPassword)
+            }
             required
             className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 outline-none peer mt-2"
           />
@@ -285,7 +319,7 @@ const RegisterForm = forwardRef((_, ref) => {
             Confirm Password
           </label>
           <ChangeIcons
-            onClick={toggleConfirmPasswordVisibility}
+            onClick={() => toggleVisibility(setShowConfirmPassword)}
             show={showConfirmPassword}
           />
         </div>
