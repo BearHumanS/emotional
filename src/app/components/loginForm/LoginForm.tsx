@@ -12,12 +12,12 @@ import {
 } from 'react';
 import ChangeIcons from '../ChangeIcons';
 import { toast } from 'react-toastify';
-import useShowPasswordStore from '@/lib/store/useShowPasswordStore';
+import { toggleVisibility } from '@/lib/util/toggleVisibility';
 
 const LoginForm = forwardRef((_, ref) => {
   const [userId, setUserId] = useState('');
   const [userPassword, setUserPassword] = useState('');
-  const { showPassword, setShowPassword } = useShowPasswordStore();
+  const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
 
@@ -61,26 +61,9 @@ const LoginForm = forwardRef((_, ref) => {
     }
   };
 
-  useEffect(() => {
-    const inputs = document.querySelectorAll('input');
-
-    inputs.forEach((input) => {
-      if (input.value !== '') {
-        const label = input.nextElementSibling;
-        if (label) {
-          label.classList.add('peer-valid');
-        }
-      }
-    });
-  }, []);
-
-  const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev);
-  };
-
   return (
     <section>
-      <h2 className="text-white text-4xl mb-24 flex justify-center">로그인</h2>
+      <h2 className="text-white text-4xl mb-12 flex justify-center">로그인</h2>
       <form onSubmit={onLoginSubmit} className="flex flex-col gap-4 w-[305px]">
         <div className="relative group">
           <input
@@ -115,7 +98,10 @@ const LoginForm = forwardRef((_, ref) => {
           >
             Password
           </label>
-          <ChangeIcons onClick={togglePasswordVisibility} show={showPassword} />
+          <ChangeIcons
+            onClick={() => toggleVisibility(setShowPassword)}
+            show={showPassword}
+          />
         </div>
 
         <button
