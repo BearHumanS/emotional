@@ -41,6 +41,8 @@ const WithAuth = <P extends object>(
       return () => clearInterval(intervalId);
     }, [setUserData]);
 
+    console.log(userData);
+
     useEffect(() => {
       if (!isLoading) {
         if (isError || !userData) {
