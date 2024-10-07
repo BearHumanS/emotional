@@ -20,8 +20,9 @@ const WithAuth = <P extends object>(
       const checkAuth = async () => {
         try {
           const user = await fetchUser();
-          setUserData(user);
+          setUserData(user.user);
           setIsLoading(false);
+          console.log(user.user);
         } catch (error) {
           setIsError(true);
           setIsLoading(false);
