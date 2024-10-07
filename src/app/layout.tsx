@@ -4,7 +4,7 @@ import { getMetadata } from '@/lib/util/getMetaData';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import './globals.css';
 import Footer from './components/footer/Footer';
-import ReactQueryProvider from '@/lib/util/ReactQueryProvider';
+
 import ToastProvider from '@/lib/util/ToastProvider';
 
 export const metadata = getMetadata();
@@ -57,10 +57,8 @@ export default function Layout({
           }}
         />
         <ToastProvider />
-        <ReactQueryProvider>
-          {children}
-          <Footer />
-        </ReactQueryProvider>
+        {children}
+        <Footer />
       </body>
       <GoogleAnalytics gaId={GA} />
     </html>

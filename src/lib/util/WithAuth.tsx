@@ -1,17 +1,44 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { FunctionComponent, useEffect, ComponentType } from 'react';
-import { useAuthQuery } from '@/hooks/queries/useAuthQuery';
+import { FunctionComponent, useEffect, ComponentType, useState } from 'react';
+
 import RedirectComponent from '@/app/components/RedirectComponent';
+import userDataStore from '@/store/userDataStore';
+import { fetchUser } from '@/app/api/userApi';
 
 const WithAuth = <P extends object>(
   Component: ComponentType<P>,
 ): FunctionComponent<P> => {
   const WrappedComponent: FunctionComponent<P> = (props) => {
     const router = useRouter();
+    const { userData, setUserData } = userDataStore();
+    const [isLoading, setIsLoading] = useState(true);
+    const [isError, setIsError] = useState(false);
 
-    const { data: userData, isError, isLoading } = useAuthQuery();
+    useEffect(() => {
+      const checkAuth = async () => {
+        try {
+          const user = await fetchUser();
+          setUserData(user);
+          setIsLoading(false);
+        } catch (error) {
+          setIsError(true);
+          setIsLoading(false);
+        }
+      };
+
+      checkAuth();
+
+      const intervalId = setInterval(
+        () => {
+          checkAuth();
+        },
+        5 * 60 * 1000,
+      );
+
+      return () => clearInterval(intervalId);
+    }, [setUserData]);
 
     useEffect(() => {
       if (!isLoading) {
@@ -29,7 +56,6 @@ const WithAuth = <P extends object>(
       return <RedirectComponent />;
     }
 
-    // 인증된 사용자일 때만 컴포넌트 렌더링
     return <Component {...props} />;
   };
 

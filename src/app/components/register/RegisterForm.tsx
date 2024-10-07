@@ -1,6 +1,6 @@
 'use client';
 
-import { fetchRegister } from '@/app/api/userApi';
+import { fetchRegister, sendVerification, verifyCode } from '@/app/api/userApi';
 import { useRouter } from 'next/navigation';
 import {
   ChangeEvent,
@@ -20,9 +20,7 @@ import {
   validatePassword,
   validateConfirmPassword,
 } from '@/lib/util/validators';
-import { useSendVerification } from '@/hooks/queries/useSendVerification';
 import { toggleVisibility } from '@/lib/util/toggleVisibility';
-import { useVerify } from '@/hooks/queries/useVerfy';
 
 const RegisterForm = forwardRef((_, ref) => {
   const [userId, setUserId] = useState('');
@@ -36,6 +34,9 @@ const RegisterForm = forwardRef((_, ref) => {
   const [isExpired, setIsExpired] = useState(false);
   const [isResend, setIsResend] = useState(false);
   const [isVerify, setIsVerify] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isVerificationLoading, setIsVerificationLoading] = useState(false);
+  const [isVerifyLoading, setIsVerifyLoading] = useState(false);
 
   const router = useRouter();
 
@@ -51,6 +52,7 @@ const RegisterForm = forwardRef((_, ref) => {
       setIsExpired(false);
       setIsResend(false);
       setIsVerify(false);
+      setIsLoading(false);
     },
   }));
 
@@ -86,47 +88,48 @@ const RegisterForm = forwardRef((_, ref) => {
     setVerificationCode(e.target.value);
   };
 
-  const sendVerificationMutation = useSendVerification({
-    setivsiblity,
-  });
-
-  const onSendVerifcation = () => {
+  const onSendVerification = async () => {
     const isEmailValid = validateEmail(userId);
     if (!isEmailValid) {
       toast.warn('이메일을 입력해주세요.');
       return;
     }
 
-    sendVerificationMutation.mutate(userId, {
-      onSuccess: () => {
-        setIsExpired(false);
-        setTimer(300);
-        setivsiblity(true);
-        setIsResend(true);
-        setIsVerify(false);
-      },
-    });
+    try {
+      setIsVerificationLoading(true);
+      await sendVerification(userId);
+      setIsExpired(false);
+      setTimer(300);
+      setivsiblity(true);
+      setIsResend(true);
+      setIsVerify(false);
+      toast.success('인증 코드가 전송되었습니다.');
+    } catch (error) {
+      console.error('인증 코드 전송 실패:', error);
+      toast.error('인증 코드 전송에 실패했습니다.');
+    } finally {
+      setIsVerificationLoading(false);
+    }
   };
 
-  const verifyMutation = useVerify({
-    setIsVerify,
-  });
-
-  const onVerify = () => {
+  const onVerify = async () => {
     if (!verificationCode) {
       toast.warn('인증코드를 입력해주세요.');
       return;
     }
 
-    verifyMutation.mutate(
-      { email: userId, verificationCode },
-      {
-        onSuccess: () => {
-          setIsVerify(true);
-          setIsExpired(false);
-        },
-      },
-    );
+    try {
+      setIsVerifyLoading(true);
+      await verifyCode({ email: userId, verificationCode });
+      setIsVerify(true);
+      setIsExpired(false);
+      toast.success('인증이 완료되었습니다.');
+    } catch (error) {
+      console.error('인증 실패:', error);
+      toast.error('인증에 실패했습니다.');
+    } finally {
+      setIsVerifyLoading(false);
+    }
   };
 
   const onRegisterSubmit = async (e: FormEvent) => {
@@ -157,8 +160,8 @@ const RegisterForm = forwardRef((_, ref) => {
           verificationCode,
         });
 
-        toast.success('회원가입을 환영합니다! 로그인해주세요!');
-        router.push('/');
+        toast.success('회원가입을 환영합니다!');
+        router.replace('/');
       } catch (error) {
         if (error instanceof Error) {
           console.error('회원가입 실패:', error.message);
@@ -202,15 +205,13 @@ const RegisterForm = forwardRef((_, ref) => {
           <div className="h-[50px] flex items-end">
             <button
               type="button"
-              disabled={sendVerificationMutation.isPending}
-              onClick={onSendVerifcation}
+              disabled={isVerificationLoading}
+              onClick={onSendVerification}
               className={`h-[42px] w-[50px] bg-gray-200 outline-none rounded-lg ${
-                sendVerificationMutation.isPending
-                  ? 'cursor-not-allowed'
-                  : 'cursor-pointer'
+                isVerificationLoading ? 'cursor-not-allowed' : 'cursor-pointer'
               } font-semibold hover:text-gray-200 hover:bg-black transtion-color duration-300`}
             >
-              {sendVerificationMutation.isPending ? (
+              {isVerificationLoading ? (
                 <div className="flex justify-center">
                   <UseAnimations
                     animation={loading}
@@ -255,12 +256,12 @@ const RegisterForm = forwardRef((_, ref) => {
               onClick={onVerify}
               disabled={isExpired || isVerify}
               className={`h-[42px] w-[50px] bg-gray-200 outline-none rounded-lg ${
-                sendVerificationMutation.isPending || isExpired || isVerify
+                isVerifyLoading || isExpired || isVerify
                   ? 'cursor-not-allowed'
                   : 'cursor-pointer'
               } font-semibold  ${!isExpired && 'hover:bg-black hover:text-gray-200'} transtion-color duration-300`}
             >
-              {verifyMutation.isPending ? (
+              {isVerifyLoading ? (
                 <div className="flex justify-center">
                   <UseAnimations
                     animation={loading}
@@ -326,9 +327,21 @@ const RegisterForm = forwardRef((_, ref) => {
 
         <button
           type="submit"
+          disabled={isLoading}
           className="mt-4 bg-gray-200 text-black font-semibold py-3 rounded-lg w-full hover:text-gray-200 hover:bg-black transition-colors duration-300"
         >
-          회원가입
+          {isLoading ? (
+            <div className="flex justify-center">
+              <UseAnimations
+                animation={loading}
+                size={24}
+                speed={2}
+                strokeColor="gray"
+              />
+            </div>
+          ) : (
+            '회원가입'
+          )}
         </button>
       </form>
     </section>
