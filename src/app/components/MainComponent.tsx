@@ -16,9 +16,9 @@ function MainComponent() {
   const [videoRecommendation, setVideoRecommendation] = useState<Video | null>(
     null,
   );
-  const [keyword, setKeyword] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [keyword, setKeyword] = useState<string>('');
   const [listening, setListening] = useState<boolean>(false);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
   const text = 'Emotional';
 
@@ -54,15 +54,16 @@ function MainComponent() {
           diaryEntry={diaryEntry}
           setDiaryEntry={setDiaryEntry}
           setVideoRecommendation={setVideoRecommendation}
+          keyword={keyword}
           setKeyword={setKeyword}
-          setIsLoading={setIsLoading}
-          isLoading={isLoading}
           listening={listening}
+          setIsPlaying={setIsPlaying}
         />
 
         <SearcResultComponent
           videoRecommendation={videoRecommendation}
-          keyword={keyword}
+          isPlaying={isPlaying}
+          setIsPlaying={setIsPlaying}
         />
       </div>
     </div>
