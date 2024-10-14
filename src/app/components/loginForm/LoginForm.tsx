@@ -48,10 +48,10 @@ const LoginForm = forwardRef((_, ref) => {
         });
 
         toast.success('로그인에 성공했습니다.');
-        router.push('/');
+        router.replace('/');
       } catch (error) {
         if (error instanceof Error) {
-          console.error('회원가입 실패:', error.message);
+          console.error('로그인 실패:', error.message);
           toast.error(error.message);
         } else {
           console.error('회원가입 실패: 알 수 없는 에러', error);
