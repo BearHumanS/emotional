@@ -3,7 +3,7 @@ import { fetchData } from '../fetchData';
 export const fetchYoutubeVideos = async (keyword: string) => {
   try {
     const res = await fetchData(
-      `/youtubeSearch?maxResults=5&q=${encodeURIComponent(keyword + ' 노래 playlist')}`,
+      `/youtubeSearch?maxResults=20&q=${encodeURIComponent(keyword + ' 노래 playlist')}`,
       'get',
     );
 
@@ -13,7 +13,9 @@ export const fetchYoutubeVideos = async (keyword: string) => {
       throw new Error('비디오 데이터를 찾을 수 없습니다.');
     }
 
-    return items;
+    const randomVideo = items[Math.floor(Math.random() * items.length)];
+
+    return randomVideo;
   } catch (error) {
     console.error(error);
     throw new Error('플레이리스트 불러오기 실패');
