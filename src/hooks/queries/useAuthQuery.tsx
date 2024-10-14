@@ -10,20 +10,20 @@ export const useAuthQuery = () => {
     queryFn: async () => {
       const response = await fetchUser();
 
-      // response 자체를 확인하는 방식으로 변경
       if (!response || response.status === 401) {
         throw new Error('Unauthorized');
       }
 
-      return response; // response.data 대신 response 전체 반환
+      return response;
     },
     retry: false,
-    staleTime: 1000 * 60 * 5,
+    staleTime: 1000 * 60 * 30,
+    gcTime: 1000 * 60 * 30,
     refetchInterval: 1000 * 60 * 5,
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
   });
 
-  // 에러 처리 및 리다이렉트 조건 확인
   if (isError && error instanceof Error && error.message === 'Unauthorized') {
     router.push('/auth');
   }
