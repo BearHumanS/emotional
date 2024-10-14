@@ -2,36 +2,33 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import userIsLoadingStore from '@/lib/store/useIsLoadingStore';
 import { useAuthQuery } from '@/hooks/queries/useAuthQuery';
 
 function Redirect() {
   const router = useRouter();
   const [seconds, setSeconds] = useState(3);
-  const { setIsCheckedLoading } = userIsLoadingStore();
-  const { data: userData } = useAuthQuery();
+  const { data: userData, isLoading, isError } = useAuthQuery();
 
   useEffect(() => {
-    setIsCheckedLoading(true);
-    const countdown = setInterval(() => {
-      setSeconds((prevSeconds) => prevSeconds - 1);
-    }, 1000);
+    if (!isLoading) {
+      const countdown = setInterval(() => {
+        setSeconds((prevSeconds) => prevSeconds - 1);
+      }, 1000);
 
-    const timer = setTimeout(() => {
-      setIsCheckedLoading(false);
-      if (!userData) {
-        router.replace('/auth');
-      } else {
-        router.replace('/');
-      }
-    }, 3000);
+      const timer = setTimeout(() => {
+        if (isError || !userData) {
+          router.push('/auth');
+        } else {
+          router.push('/');
+        }
+      }, 3000);
 
-    return () => {
-      clearInterval(countdown);
-      clearTimeout(timer);
-    };
-  }, [router, setIsCheckedLoading, userData]);
+      return () => {
+        clearInterval(countdown);
+        clearTimeout(timer);
+      };
+    }
+  }, [isError, isLoading, router, userData]);
 
   return (
     <section className="w-[460px] h-dvh flex justify-center items-center bg-white rounded-lg p-8 overflow-hidden shadow-md">
